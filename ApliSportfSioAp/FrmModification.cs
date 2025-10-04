@@ -33,20 +33,20 @@ namespace ApliSportfSioAp
                 using (MySqlConnection cnx = new MySqlConnection(chConnexion))
                 {
                     cnx.Open();
-                    string requete = @"UPDATE Sportif SET 
-                                        Nom = @nom, 
-                                        Prénom = @prénom, 
-                                        DateNaissance = @dateNaissance, 
-                                        Rue = @rue, 
-                                        CodePostal = @codePostal, 
-                                        Ville = @ville, 
-                                        NiveauExperience = @niveau, 
-                                        NomSport = @sport 
-                                       WHERE IdSportif = @id";
+                    string requete = @"UPDATE Sportif SET  
+                                        nom = @nom,  
+                                        prenom = @prenom,  
+                                        dateNais = @dateNaissance,  
+                                        rue = @rue,  
+                                        codePostal = @codePostal,  
+                                        ville = @ville,  
+                                        niveauExperience = @niveau,  
+                                        nomSport = @sport  
+                                        WHERE id = @id";
 
                     MySqlCommand cmd = new MySqlCommand(requete, cnx);
                     cmd.Parameters.AddWithValue("@nom", txtNom.Text);
-                    cmd.Parameters.AddWithValue("@prénom", txtPrenom.Text);
+                    cmd.Parameters.AddWithValue("@prenom", txtPrenom.Text);
                     cmd.Parameters.AddWithValue("@dateNaissance", dtpNaissance.Value);
                     cmd.Parameters.AddWithValue("@rue", txtRue.Text);
                     cmd.Parameters.AddWithValue("@codePostal", txtCodePostal.Text);
@@ -54,7 +54,7 @@ namespace ApliSportfSioAp
                     cmd.Parameters.AddWithValue("@niveau", int.Parse(txtNiveau.Text));
                     cmd.Parameters.AddWithValue("@sport", txtSport.Text);
                     cmd.Parameters.AddWithValue("@id", idSportif);
-                    
+
 
 
                     cmd.ExecuteNonQuery();
@@ -68,32 +68,8 @@ namespace ApliSportfSioAp
             }
         }
 
-        private void btnSupprimer_Click(object sender, EventArgs e)
-        {
-            var confirm = MessageBox.Show("Confirmer la suppression ?", "Suppression", MessageBoxButtons.YesNo);
-            if (confirm == DialogResult.Yes)
-            {
-                try
-                {
-                    string chConnexion = ConfigurationManager.ConnectionStrings["cnxBdSport"].ConnectionString;
-                    using (MySqlConnection cnx = new MySqlConnection(chConnexion))
-                    {
-                        cnx.Open();
-                        string requete = "DELETE FROM Sportif WHERE IdSportif = @id";
-                        MySqlCommand cmd = new MySqlCommand(requete, cnx);
-                        cmd.Parameters.AddWithValue("@id", idSportif);
-                        cmd.ExecuteNonQuery();
-                        MessageBox.Show("Sportif supprimé !");
-                        this.Close();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Erreur lors de la suppression : " + ex.Message);
-                }
-            }
-        }
+     
 
-       
+        
     }
 }

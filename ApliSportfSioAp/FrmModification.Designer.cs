@@ -30,7 +30,6 @@
         {
             this.components = new System.ComponentModel.Container();
             this.btnModifier = new System.Windows.Forms.Button();
-            this.btnSupprimer = new System.Windows.Forms.Button();
             this.txtNom = new System.Windows.Forms.TextBox();
             this.txtPrenom = new System.Windows.Forms.TextBox();
             this.txtRue = new System.Windows.Forms.TextBox();
@@ -58,16 +57,6 @@
             this.btnModifier.Text = "Modifier";
             this.btnModifier.UseVisualStyleBackColor = true;
             this.btnModifier.Click += new System.EventHandler(this.btnModifier_Click);
-            // 
-            // btnSupprimer
-            // 
-            this.btnSupprimer.Location = new System.Drawing.Point(433, 60);
-            this.btnSupprimer.Name = "btnSupprimer";
-            this.btnSupprimer.Size = new System.Drawing.Size(86, 31);
-            this.btnSupprimer.TabIndex = 1;
-            this.btnSupprimer.Text = "Supprimer";
-            this.btnSupprimer.UseVisualStyleBackColor = true;
-            this.btnSupprimer.Click += new System.EventHandler(this.btnSupprimer_Click);
             // 
             // txtNom
             // 
@@ -192,12 +181,12 @@
             this.dtpNaissance.Name = "dtpNaissance";
             this.dtpNaissance.Size = new System.Drawing.Size(200, 20);
             this.dtpNaissance.TabIndex = 17;
-            
             // 
             // FrmModification
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
             this.ClientSize = new System.Drawing.Size(798, 450);
             this.Controls.Add(this.dtpNaissance);
             this.Controls.Add(this.txtSport);
@@ -214,7 +203,6 @@
             this.Controls.Add(this.txtRue);
             this.Controls.Add(this.txtPrenom);
             this.Controls.Add(this.txtNom);
-            this.Controls.Add(this.btnSupprimer);
             this.Controls.Add(this.btnModifier);
             this.Name = "FrmModification";
             this.Text = "Modification";
@@ -226,7 +214,6 @@
         #endregion
 
         private System.Windows.Forms.Button btnModifier;
-        private System.Windows.Forms.Button btnSupprimer;
         private System.Windows.Forms.TextBox txtNom;
         private System.Windows.Forms.TextBox txtPrenom;
         private System.Windows.Forms.TextBox txtRue;

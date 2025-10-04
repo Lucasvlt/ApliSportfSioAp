@@ -31,6 +31,9 @@ namespace ApliSportfSioAp
             listSportifs.Columns.Add("Ville", 100, HorizontalAlignment.Left);
             listSportifs.Columns.Add("Niveau", 80, HorizontalAlignment.Right);
             listSportifs.Columns.Add("Sport", 100, HorizontalAlignment.Left);
+
+            // Associer le menu contextuel
+            listSportifs.ContextMenuStrip = contextMenuStrip1;
         }
 
         private void FrmAccueil_Load(object sender, EventArgs e)
@@ -101,11 +104,44 @@ namespace ApliSportfSioAp
             }
         }
 
-        private void btnModifier_Click(object sender, EventArgs e)
+
+        private void btnQuitter_Click_1(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void txtValeur_TextChanged(object sender, EventArgs e)
+        {
+            // Optionnel : recherche en temps réel
+        }
+
+        // ❌ Supprimé : ne pas déclencher automatiquement la modification
+        private void listSportifs_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // Ne rien faire ici
+        }
+
+        // ✅ Menu contextuel : clic droit
+        private void listSportifs_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                var item = listSportifs.GetItemAt(e.X, e.Y);
+                if (item != null)
+                {
+                    item.Selected = true;
+                    contextMenuStrip1.Show(listSportifs, e.Location);
+                }
+            }
+        }
+
+        // ✅ Actions du menu contextuel
+        private void modifierToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (listSportifs.SelectedItems.Count > 0)
             {
                 ListViewItem selectedItem = listSportifs.SelectedItems[0];
+
                 int idSportif = int.Parse(selectedItem.SubItems[0].Text);
                 string nom = selectedItem.SubItems[1].Text;
                 string prenom = selectedItem.SubItems[2].Text;
@@ -118,6 +154,8 @@ namespace ApliSportfSioAp
 
                 FrmModification frmModif = new FrmModification(idSportif, nom, prenom, dateNaissance, rue, codePostal, ville, niveau, sport);
                 frmModif.ShowDialog();
+
+                // Recharge la liste après modification
                 btnEnvoyer_Click_1(null, null);
             }
             else
@@ -126,43 +164,59 @@ namespace ApliSportfSioAp
             }
         }
 
-        private void btnSupprimer_Click(object sender, EventArgs e)
+        private void supprimerToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (listSportifs.SelectedItems.Count > 0)
+            if (listSportifs.SelectedItems.Count == 0)
             {
-                ListViewItem selectedItem = listSportifs.SelectedItems[0];
-                int idSportif = int.Parse(selectedItem.SubItems[0].Text);
+                MessageBox.Show("Sélectionne un sportif dans la liste.");
+                return;
+            }
 
-                var confirm = MessageBox.Show("Confirmer la suppression ?", "Suppression", MessageBoxButtons.YesNo);
-                if (confirm == DialogResult.Yes)
+            ListViewItem selectedItem = listSportifs.SelectedItems[0];
+            int idSportif;
+
+            // Vérification de l'ID
+            if (!int.TryParse(selectedItem.SubItems[0].Text, out idSportif))
+            {
+                MessageBox.Show("ID invalide.");
+                return;
+            }
+
+            // Confirmation
+            DialogResult confirm = MessageBox.Show("Confirmer la suppression ?", "Suppression", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            if (confirm != DialogResult.Yes)
+                return;
+
+            try
+            {
+                string chConnexion = ConfigurationManager.ConnectionStrings["cnxBdSport"].ConnectionString;
+                using (MySqlConnection cnx = new MySqlConnection(chConnexion))
                 {
-                    string chConnexion = ConfigurationManager.ConnectionStrings["cnxBdSport"].ConnectionString;
-                    using (MySqlConnection cnx = new MySqlConnection(chConnexion))
+                    cnx.Open();
+
+                    string requete = "DELETE FROM Sportif WHERE id = @id";
+                    using (MySqlCommand cmd = new MySqlCommand(requete, cnx))
                     {
-                        cnx.Open();
-                        string requete = "DELETE FROM Sportif WHERE id = @id";
-                        MySqlCommand cmd = new MySqlCommand(requete, cnx);
                         cmd.Parameters.AddWithValue("@id", idSportif);
-                        cmd.ExecuteNonQuery();
-                        MessageBox.Show("Sportif supprimé !");
-                        btnEnvoyer_Click_1(null, null);
+                        int lignesAffectées = cmd.ExecuteNonQuery();
+
+                        if (lignesAffectées > 0)
+                        {
+                            MessageBox.Show("Sportif supprimé !");
+                            btnEnvoyer_Click_1(null, null); // Recharge la liste
+                        }
+                        else
+                        {
+                            MessageBox.Show("Aucun sportif trouvé avec cet ID.");
+                        }
                     }
                 }
             }
-            else
+            catch (Exception ex)
             {
-                MessageBox.Show("Sélectionne un sportif dans la liste.");
+                MessageBox.Show("Erreur lors de la suppression : " + ex.Message);
             }
         }
-
-        private void btnQuitter_Click_1(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-
-        private void txtValeur_TextChanged(object sender, EventArgs e)
-        {
-            // Optionnel : recherche en temps réel
-        }
     }
-}
+    }
+

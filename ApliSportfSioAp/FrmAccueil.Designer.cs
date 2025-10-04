@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fichierToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mnSportif = new System.Windows.Forms.ToolStripMenuItem();
@@ -38,9 +39,11 @@
             this.comboBoxCritere = new System.Windows.Forms.ComboBox();
             this.txtValeur = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.btnSupprimer = new System.Windows.Forms.Button();
-            this.btnModifier = new System.Windows.Forms.Button();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.modifierToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.supprimerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
+            this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -94,12 +97,14 @@
             // 
             // listSportifs
             // 
+            this.listSportifs.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
             this.listSportifs.HideSelection = false;
             this.listSportifs.Location = new System.Drawing.Point(92, 89);
             this.listSportifs.Name = "listSportifs";
             this.listSportifs.Size = new System.Drawing.Size(586, 295);
             this.listSportifs.TabIndex = 3;
             this.listSportifs.UseCompatibleStateImageBehavior = false;
+            this.listSportifs.SelectedIndexChanged += new System.EventHandler(this.listSportifs_SelectedIndexChanged);
             // 
             // comboBoxCritere
             // 
@@ -126,33 +131,34 @@
             this.label1.TabIndex = 6;
             this.label1.Text = "Critères de sélection";
             // 
-            // btnSupprimer
+            // contextMenuStrip1
             // 
-            this.btnSupprimer.Location = new System.Drawing.Point(695, 109);
-            this.btnSupprimer.Name = "btnSupprimer";
-            this.btnSupprimer.Size = new System.Drawing.Size(75, 23);
-            this.btnSupprimer.TabIndex = 7;
-            this.btnSupprimer.Text = "Supprimer";
-            this.btnSupprimer.UseVisualStyleBackColor = true;
-            this.btnSupprimer.Click += new System.EventHandler(this.btnSupprimer_Click);
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.modifierToolStripMenuItem,
+            this.supprimerToolStripMenuItem});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(130, 48);
             // 
-            // btnModifier
+            // modifierToolStripMenuItem
             // 
-            this.btnModifier.Location = new System.Drawing.Point(695, 160);
-            this.btnModifier.Name = "btnModifier";
-            this.btnModifier.Size = new System.Drawing.Size(75, 23);
-            this.btnModifier.TabIndex = 8;
-            this.btnModifier.Text = "Modifier";
-            this.btnModifier.UseVisualStyleBackColor = true;
-            this.btnModifier.Click += new System.EventHandler(this.btnModifier_Click);
+            this.modifierToolStripMenuItem.Name = "modifierToolStripMenuItem";
+            this.modifierToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+            this.modifierToolStripMenuItem.Text = "Modifier";
+            this.modifierToolStripMenuItem.Click += new System.EventHandler(this.modifierToolStripMenuItem_Click);
+            // 
+            // supprimerToolStripMenuItem
+            // 
+            this.supprimerToolStripMenuItem.Name = "supprimerToolStripMenuItem";
+            this.supprimerToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+            this.supprimerToolStripMenuItem.Text = "Supprimer";
+            this.supprimerToolStripMenuItem.Click += new System.EventHandler(this.supprimerToolStripMenuItem_Click);
             // 
             // FrmAccueil
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.btnModifier);
-            this.Controls.Add(this.btnSupprimer);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.txtValeur);
             this.Controls.Add(this.comboBoxCritere);
@@ -166,6 +172,7 @@
             this.Load += new System.EventHandler(this.FrmAccueil_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -183,8 +190,9 @@
         private System.Windows.Forms.TextBox txtValeur;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ToolStripMenuItem modificationToolStripMenuItem;
-        private System.Windows.Forms.Button btnSupprimer;
-        private System.Windows.Forms.Button btnModifier;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem modifierToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem supprimerToolStripMenuItem;
     }
 }
 

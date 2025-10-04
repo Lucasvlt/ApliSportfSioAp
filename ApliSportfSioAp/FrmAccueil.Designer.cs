@@ -42,6 +42,7 @@
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.modifierToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.supprimerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnAjouter = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -153,12 +154,23 @@
             this.supprimerToolStripMenuItem.Text = "Supprimer";
             this.supprimerToolStripMenuItem.Click += new System.EventHandler(this.supprimerToolStripMenuItem_Click);
             // 
+            // btnAjouter
+            // 
+            this.btnAjouter.Location = new System.Drawing.Point(707, 89);
+            this.btnAjouter.Name = "btnAjouter";
+            this.btnAjouter.Size = new System.Drawing.Size(81, 34);
+            this.btnAjouter.TabIndex = 19;
+            this.btnAjouter.Text = "Ajouter";
+            this.btnAjouter.UseVisualStyleBackColor = true;
+            this.btnAjouter.Click += new System.EventHandler(this.btnAjouter_Click);
+            // 
             // FrmAccueil
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.btnAjouter);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.txtValeur);
             this.Controls.Add(this.comboBoxCritere);
@@ -193,6 +205,7 @@
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem modifierToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem supprimerToolStripMenuItem;
+        private System.Windows.Forms.Button btnAjouter;
     }
 }
 

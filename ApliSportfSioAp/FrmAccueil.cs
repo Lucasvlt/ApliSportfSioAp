@@ -217,6 +217,15 @@ namespace ApliSportfSioAp
                 MessageBox.Show("Erreur lors de la suppression : " + ex.Message);
             }
         }
+
+        private void btnAjouter_Click(object sender, EventArgs e)
+        {
+            FrmModification frmAjout = new FrmModification(); // Ouvre le formulaire vide
+            frmAjout.ShowDialog(); // Attend que l'utilisateur insère et ferme
+
+            // Recharge la liste après ajout
+            btnEnvoyer_Click_1(null, null);
+        }
     }
     }
 

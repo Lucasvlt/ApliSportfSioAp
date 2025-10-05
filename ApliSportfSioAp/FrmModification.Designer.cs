@@ -54,7 +54,7 @@
             // 
             // btnModifier
             // 
-            this.btnModifier.Location = new System.Drawing.Point(270, 58);
+            this.btnModifier.Location = new System.Drawing.Point(302, 58);
             this.btnModifier.Name = "btnModifier";
             this.btnModifier.Size = new System.Drawing.Size(93, 33);
             this.btnModifier.TabIndex = 0;
@@ -188,7 +188,7 @@
             // 
             // btnInserer
             // 
-            this.btnInserer.Location = new System.Drawing.Point(432, 58);
+            this.btnInserer.Location = new System.Drawing.Point(411, 58);
             this.btnInserer.Name = "btnInserer";
             this.btnInserer.Size = new System.Drawing.Size(93, 33);
             this.btnInserer.TabIndex = 18;

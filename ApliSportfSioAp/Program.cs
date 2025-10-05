@@ -12,11 +12,20 @@ namespace ApliSportfSioAp
         /// Point d'entrée principal de l'application.
         /// </summary>
         [STAThread]
+       
         static void Main()
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new FrmAccueil());
+
+            // Démarrer par le formulaire de connexion
+            FrmConnexion frmConnexion = new FrmConnexion();
+            if (frmConnexion.ShowDialog() == DialogResult.OK)
+            {
+                // Si la connexion est réussie, ouvrir le formulaire principal
+                Application.Run(new FrmAccueil());
+            }
         }
+
     }
 }

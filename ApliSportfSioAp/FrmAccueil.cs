@@ -7,10 +7,12 @@ namespace ApliSportfSioAp
 {
     public partial class FrmAccueil : Form
     {
+        private string login;
+
         public FrmAccueil()
         {
             InitializeComponent();
-
+            FrmAccueil frm = new FrmAccueil(login);
             // Initialisation des critères de recherche
             comboBoxCritere.Items.Add("Ville");
             comboBoxCritere.Items.Add("Niveau");
@@ -34,6 +36,11 @@ namespace ApliSportfSioAp
 
             // Associer le menu contextuel
             listSportifs.ContextMenuStrip = contextMenuStrip1;
+        }
+
+        public FrmAccueil(string login)
+        {
+            this.login = login;
         }
 
         private void FrmAccueil_Load(object sender, EventArgs e)

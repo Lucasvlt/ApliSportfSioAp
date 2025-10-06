@@ -110,6 +110,12 @@
     <Compile Include="FrmAccueil.Designer.cs">
       <DependentUpon>FrmAccueil.cs</DependentUpon>
     </Compile>
+    <Compile Include="FrmInscription.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmInscription.Designer.cs">
+      <DependentUpon>FrmInscription.cs</DependentUpon>
+    </Compile>
     <Compile Include="FrmModification.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -123,6 +129,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FrmAccueil.resx">
       <DependentUpon>FrmAccueil.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmInscription.resx">
+      <DependentUpon>FrmInscription.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmModification.resx">
       <DependentUpon>FrmModification.cs</DependentUpon>

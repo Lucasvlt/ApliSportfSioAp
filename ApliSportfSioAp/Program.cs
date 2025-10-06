@@ -20,10 +20,12 @@ namespace ApliSportfSioAp
 
             // Démarrer par le formulaire de connexion
             FrmConnexion frmConnexion = new FrmConnexion();
-            if (frmConnexion.ShowDialog() == DialogResult.OK)
+            DialogResult result = frmConnexion.ShowDialog();
+
+            if (result == DialogResult.OK)
             {
-                // Si la connexion est réussie, ouvrir le formulaire principal
-                Application.Run(new FrmAccueil());
+                string login = frmConnexion.Tag?.ToString(); // ✅ Récupère le login
+                Application.Run(new FrmAccueil(login));      // ✅ Lance le reste du projet
             }
         }
 

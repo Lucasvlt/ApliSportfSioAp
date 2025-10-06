@@ -43,7 +43,6 @@
             this.modifierToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.supprimerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.btnAjouter = new System.Windows.Forms.Button();
-            this.lblBienvenue = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -111,14 +110,14 @@
             // comboBoxCritere
             // 
             this.comboBoxCritere.FormattingEnabled = true;
-            this.comboBoxCritere.Location = new System.Drawing.Point(121, 49);
+            this.comboBoxCritere.Location = new System.Drawing.Point(120, 36);
             this.comboBoxCritere.Name = "comboBoxCritere";
             this.comboBoxCritere.Size = new System.Drawing.Size(121, 21);
             this.comboBoxCritere.TabIndex = 4;
             // 
             // txtValeur
             // 
-            this.txtValeur.Location = new System.Drawing.Point(262, 47);
+            this.txtValeur.Location = new System.Drawing.Point(287, 37);
             this.txtValeur.Name = "txtValeur";
             this.txtValeur.Size = new System.Drawing.Size(391, 20);
             this.txtValeur.TabIndex = 5;
@@ -127,7 +126,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 54);
+            this.label1.Location = new System.Drawing.Point(12, 39);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(102, 13);
             this.label1.TabIndex = 6;
@@ -165,22 +164,12 @@
             this.btnAjouter.UseVisualStyleBackColor = true;
             this.btnAjouter.Click += new System.EventHandler(this.btnAjouter_Click);
             // 
-            // lblBienvenue
-            // 
-            this.lblBienvenue.AutoSize = true;
-            this.lblBienvenue.Location = new System.Drawing.Point(361, 9);
-            this.lblBienvenue.Name = "lblBienvenue";
-            this.lblBienvenue.Size = new System.Drawing.Size(58, 13);
-            this.lblBienvenue.TabIndex = 20;
-            this.lblBienvenue.Text = "Bienvenue";
-            // 
             // FrmAccueil
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.lblBienvenue);
             this.Controls.Add(this.btnAjouter);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.txtValeur);
@@ -217,7 +206,6 @@
         private System.Windows.Forms.ToolStripMenuItem modifierToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem supprimerToolStripMenuItem;
         private System.Windows.Forms.Button btnAjouter;
-        private System.Windows.Forms.Label lblBienvenue;
     }
 }
 

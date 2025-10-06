@@ -9,10 +9,11 @@ namespace ApliSportfSioAp
     {
         private string login;
 
-        public FrmAccueil()
+        public FrmAccueil(string login)
         {
             InitializeComponent();
-            FrmAccueil frm = new FrmAccueil(login);
+            this.login = login;
+
             // Initialisation des critères de recherche
             comboBoxCritere.Items.Add("Ville");
             comboBoxCritere.Items.Add("Niveau");
@@ -38,10 +39,7 @@ namespace ApliSportfSioAp
             listSportifs.ContextMenuStrip = contextMenuStrip1;
         }
 
-        public FrmAccueil(string login)
-        {
-            this.login = login;
-        }
+        
 
         private void FrmAccueil_Load(object sender, EventArgs e)
         {
@@ -51,8 +49,15 @@ namespace ApliSportfSioAp
         private void btnEnvoyer_Click_1(object sender, EventArgs e)
         {
             listSportifs.Items.Clear();
+            if (comboBoxCritere.SelectedItem == null)
+            {
+                MessageBox.Show("Veuillez sélectionner un critère de recherche.");
+                return;
+            }
 
             string critere = comboBoxCritere.SelectedItem.ToString();
+
+            
             string valeur = txtValeur.Text.Trim();
 
             string chConnexion = ConfigurationManager.ConnectionStrings["cnxBdSport"].ConnectionString;
@@ -233,6 +238,8 @@ namespace ApliSportfSioAp
             // Recharge la liste après ajout
             btnEnvoyer_Click_1(null, null);
         }
+
+        
     }
     }
 

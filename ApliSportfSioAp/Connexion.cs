@@ -7,19 +7,18 @@ namespace ApliSportfSioAp
 {
     public partial class FrmConnexion : Form
     {
+        
         public FrmConnexion()
         {
             InitializeComponent();
         }
 
-        // ✅ Connexion utilisateur
-        
         private void btnConnexion_Click(object sender, EventArgs e)
         {
             string login = txtLogin.Text.Trim();
-            string motDePasse = txtMotDePasse.Text;
+            string motDePasse = txtMotDePasse.Text.Trim();
 
-            if (string.IsNullOrWhiteSpace(login) || string.IsNullOrWhiteSpace(motDePasse))
+            if (string.IsNullOrEmpty(login) || string.IsNullOrEmpty(motDePasse))
             {
                 MessageBox.Show("Veuillez remplir tous les champs.");
                 return;
@@ -29,100 +28,79 @@ namespace ApliSportfSioAp
             using (MySqlConnection cnx = new MySqlConnection(chConnexion))
             {
                 cnx.Open();
-                string requete = "SELECT COUNT(*) FROM Utilisateur WHERE login = @login AND motDePasse = @mdp";
+                string requete = "SELECT COUNT(*) FROM Utilisateur WHERE login = @login AND motDePasse = @motDePasse";
+
                 MySqlCommand cmd = new MySqlCommand(requete, cnx);
                 cmd.Parameters.AddWithValue("@login", login);
-                cmd.Parameters.AddWithValue("@mdp", motDePasse);
+                cmd.Parameters.AddWithValue("@motDePasse", motDePasse);
 
-                int count = Convert.ToInt32(cmd.ExecuteScalar());
+                int nb = Convert.ToInt32(cmd.ExecuteScalar());
 
-                if (count == 1)
+                if (nb > 0)
                 {
                     MessageBox.Show("Connexion réussie !");
-                    this.Hide(); // cacher le formulaire de connexion
-                    FrmAccueil frm = new FrmAccueil(); // ou ton formulaire principal
-                    frm.ShowDialog();
-                    this.Close(); // fermer le formulaire après fermeture de FrmAccueil
+                    this.DialogResult = DialogResult.OK; // ✅ Indique au Main que c’est validé
+                    this.Tag = login; // ✅ Stocke le login pour le récupérer dans Main
+                    this.Close();     // ✅ Ferme le formulaire de connexion
                 }
                 else
                 {
-                    MessageBox.Show("Login ou mot de passe incorrect.");
-                }
-            }
-        }
-        // ✅ Création de compte
-        private void btnCreerCompte_Click(object sender, EventArgs e)
-        {
-            string login = txtLogin.Text.Trim();
-            string motDePasse = txtMotDePasse.Text;
-
-            if (string.IsNullOrWhiteSpace(login) || string.IsNullOrWhiteSpace(motDePasse))
-            {
-                MessageBox.Show("Veuillez remplir tous les champs.");
-                return;
-            }
-
-            string chConnexion = ConfigurationManager.ConnectionStrings["cnxBdSport"].ConnectionString;
-            using (MySqlConnection cnx = new MySqlConnection(chConnexion))
-            {
-                cnx.Open();
-                string requete = "INSERT INTO Utilisateur (login, motDePasse) VALUES (@login, @mdp)";
-                MySqlCommand cmd = new MySqlCommand(requete, cnx);
-                cmd.Parameters.AddWithValue("@login", login);
-                cmd.Parameters.AddWithValue("@mdp", motDePasse);
-
-                try
-                {
-                    cmd.ExecuteNonQuery();
-                    MessageBox.Show("Compte créé avec succès !");
-                }
-                catch (MySqlException ex)
-                {
-                    if (ex.Number == 1062) // doublon
-                        MessageBox.Show("Ce login existe déjà. Choisissez-en un autre.");
-                    else
-                        MessageBox.Show("Erreur : " + ex.Message);
+                    MessageBox.Show("Identifiants incorrects.");
                 }
             }
         }
 
-        // ✅ Mot de passe oublié
         private void btnMdPOublie_Click(object sender, EventArgs e)
         {
+            lblNouveau.Visible = true;
             txtNouveauMotDePasse.Visible = true;
-            btnValiderReinitialisation.Visible = true;
-            MessageBox.Show("Entrez un nouveau mot de passe et cliquez sur Valider.");
+            lblConfirmer.Visible = true;
+            txtConfirmerMotDePasse.Visible = true;
+            btnValiderMotDePasse.Visible = true;
         }
 
-       
-        private void btnValiderReinitialisation_Click(object sender, EventArgs e)
+        private void btnValiderMotDePasse_Click(object sender, EventArgs e)
         {
+            string nouveau = txtNouveauMotDePasse.Text.Trim();
+            string confirmer = txtConfirmerMotDePasse.Text.Trim();
             string login = txtLogin.Text.Trim();
-            string nouveau = txtNouveauMotDePasse.Text;
 
-            if (string.IsNullOrWhiteSpace(login) || string.IsNullOrWhiteSpace(nouveau))
+            if (string.IsNullOrEmpty(login))
             {
-                MessageBox.Show("Veuillez remplir le login et le nouveau mot de passe.");
+                MessageBox.Show("Veuillez entrer votre login pour réinitialiser le mot de passe.");
                 return;
             }
-
+            if (string.IsNullOrEmpty(nouveau) || string.IsNullOrEmpty(confirmer))
+            {
+                MessageBox.Show("Veuillez remplir tous les champs de mot de passe.");
+                return;
+            }
+            if (nouveau != confirmer)
+            {
+                MessageBox.Show("Les mots de passe ne correspondent pas.");
+                return;
+            }
             string chConnexion = ConfigurationManager.ConnectionStrings["cnxBdSport"].ConnectionString;
             using (MySqlConnection cnx = new MySqlConnection(chConnexion))
             {
                 cnx.Open();
                 string requete = "UPDATE Utilisateur SET motDePasse = @mdp WHERE login = @login";
+
                 MySqlCommand cmd = new MySqlCommand(requete, cnx);
-                cmd.Parameters.AddWithValue("@login", login);
                 cmd.Parameters.AddWithValue("@mdp", nouveau);
+                cmd.Parameters.AddWithValue("@login", login);
 
                 int lignes = cmd.ExecuteNonQuery();
 
-                if (lignes == 1)
+                if (lignes > 0)
                 {
-                    MessageBox.Show("Mot de passe réinitialisé !");
+                    MessageBox.Show("Mot de passe mis à jour !");
+                    // Tu peux cacher les champs à nouveau
+                    lblNouveau.Visible = false;
                     txtNouveauMotDePasse.Visible = false;
-                    btnValiderReinitialisation.Visible = false;
-                    txtNouveauMotDePasse.Text = "";
+                    lblConfirmer.Visible = false;
+                    txtConfirmerMotDePasse.Visible = false;
+                    btnValiderMotDePasse.Visible = false;
                 }
                 else
                 {
@@ -130,6 +108,12 @@ namespace ApliSportfSioAp
                 }
             }
         }
+
+        private void btnInscription_Click(object sender, EventArgs e)
+        {
+            FrmInscription frm = new FrmInscription();
+            frm.ShowDialog();
+        }
     }
-    }
+}
 

@@ -35,7 +35,7 @@ namespace ApliSportfSioAp
             ActiverModeAjout();
         }
 
-        // ✅ Méthode pour mode ajout
+        //  Méthode pour mode ajout
         private void ActiverModeAjout()
         {
             btnInserer.Visible = true;
@@ -52,7 +52,7 @@ namespace ApliSportfSioAp
             dtpNaissance.Value = DateTime.Today;
         }
 
-        // ✅ Méthode pour mode modification
+        // Méthode pour mode modification
         private void ActiverModeModification()
         {
             btnInserer.Visible = false;
@@ -60,7 +60,7 @@ namespace ApliSportfSioAp
             this.Text = "Modification du sportif";
         }
 
-        // ✅ Bouton Modifier
+        // Bouton Modifier
         private void btnModifier_Click(object sender, EventArgs e)
         {
             try
@@ -107,7 +107,7 @@ namespace ApliSportfSioAp
             }
         }
 
-        // ✅ Bouton Insérer
+        // Bouton Insérer
         private void btnInserer_Click(object sender, EventArgs e)
         {
             try
@@ -132,6 +132,7 @@ namespace ApliSportfSioAp
 
                 DateTime dateNaissance = dtpNaissance.Value;
 
+                // Connexion et insertion
                 string chConnexion = ConfigurationManager.ConnectionStrings["cnxBdSport"].ConnectionString;
                 using (MySqlConnection cnx = new MySqlConnection(chConnexion))
                 {

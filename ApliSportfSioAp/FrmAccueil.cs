@@ -39,13 +39,13 @@ namespace ApliSportfSioAp
             listSportifs.ContextMenuStrip = contextMenuStrip1;
         }
 
-        
 
+        // Chargement initial
         private void FrmAccueil_Load(object sender, EventArgs e)
         {
             btnEnvoyer_Click_1(sender, e);
         }
-
+        // Bouton Rechercher
         private void btnEnvoyer_Click_1(object sender, EventArgs e)
         {
             listSportifs.Items.Clear();
@@ -59,7 +59,7 @@ namespace ApliSportfSioAp
 
             
             string valeur = txtValeur.Text.Trim();
-
+            // Connexion à la base et requête
             string chConnexion = ConfigurationManager.ConnectionStrings["cnxBdSport"].ConnectionString;
             using (MySqlConnection cnx = new MySqlConnection(chConnexion))
             {
@@ -127,13 +127,13 @@ namespace ApliSportfSioAp
             // Optionnel : recherche en temps réel
         }
 
-        // ❌ Supprimé : ne pas déclencher automatiquement la modification
+        // Supprimé : ne pas déclencher automatiquement la modification
         private void listSportifs_SelectedIndexChanged(object sender, EventArgs e)
         {
             // Ne rien faire ici
         }
 
-        // ✅ Menu contextuel : clic droit
+        // Menu contextuel : clic droit
         private void listSportifs_MouseClick(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
@@ -147,7 +147,7 @@ namespace ApliSportfSioAp
             }
         }
 
-        // ✅ Actions du menu contextuel
+        // Actions du menu contextuel
         private void modifierToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (listSportifs.SelectedItems.Count > 0)

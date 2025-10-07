@@ -51,7 +51,7 @@
             // 
             // txtMotDePasse
             // 
-            this.txtMotDePasse.Location = new System.Drawing.Point(174, 239);
+            this.txtMotDePasse.Location = new System.Drawing.Point(176, 239);
             this.txtMotDePasse.Name = "txtMotDePasse";
             this.txtMotDePasse.Size = new System.Drawing.Size(119, 20);
             this.txtMotDePasse.TabIndex = 4;
@@ -136,7 +136,7 @@
             // 
             // btnValiderMotDePasse
             // 
-            this.btnValiderMotDePasse.Location = new System.Drawing.Point(647, 388);
+            this.btnValiderMotDePasse.Location = new System.Drawing.Point(670, 208);
             this.btnValiderMotDePasse.Name = "btnValiderMotDePasse";
             this.btnValiderMotDePasse.Size = new System.Drawing.Size(110, 30);
             this.btnValiderMotDePasse.TabIndex = 20;

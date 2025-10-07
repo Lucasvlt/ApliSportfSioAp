@@ -57,11 +57,8 @@ namespace ApliSportfSioAp
         //  Bouton "Mot de passe oublié" → affiche les champs de réinitialisation
         private void btnMdPOublie_Click(object sender, EventArgs e)
         {
-            lblNouveau.Visible = true;
-            txtNouveauMotDePasse.Visible = true;
-            lblConfirmer.Visible = true;
-            txtConfirmerMotDePasse.Visible = true;
-            btnValiderMotDePasse.Visible = true;
+            panelMotDePasseOublie.Visible = true;
+            lblNouveau.Visible = true; txtNouveauMotDePasse.Visible = true; lblConfirmer.Visible = true; txtConfirmerMotDePasse.Visible = true; btnValiderMotDePasse.Visible = true;
         }
 
         // Bouton pour valider la réinitialisation du mot de passe
@@ -128,5 +125,7 @@ namespace ApliSportfSioAp
             FrmInscription frm = new FrmInscription();
             frm.ShowDialog(); // Affiche le formulaire en modal
         }
+
+        
     }
 }

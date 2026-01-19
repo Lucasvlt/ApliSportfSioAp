@@ -126,6 +126,6 @@ namespace ApliSportfSioAp
             frm.ShowDialog(); // Affiche le formulaire en modal
         }
 
-        
+       
     }
 }

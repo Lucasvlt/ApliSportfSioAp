@@ -64,7 +64,7 @@ namespace ApliSportfSioAp
             {
                 cnx.Open();
 
-                string chRequete = "SELECT * FROM Sportif";
+                string chRequete = "SELECT s.id, s.nom, s.prenom, s.dateNais, s.rue, s.codePostal, s.ville, s.niveauExperience, sp.nomSport FROM Sportif s INNER JOIN Sport sp ON s.idSport = sp.id";
                 bool filtrer = !string.IsNullOrEmpty(valeur); // Vérifie si une valeur est saisie
 
                 if (filtrer)

@@ -54,7 +54,9 @@
             // txtMotDePasse
             // 
             this.txtMotDePasse.Location = new System.Drawing.Point(34, 287);
+            this.txtMotDePasse.Multiline = true;
             this.txtMotDePasse.Name = "txtMotDePasse";
+            this.txtMotDePasse.PasswordChar = '*';
             this.txtMotDePasse.Size = new System.Drawing.Size(119, 20);
             this.txtMotDePasse.TabIndex = 4;
             // 

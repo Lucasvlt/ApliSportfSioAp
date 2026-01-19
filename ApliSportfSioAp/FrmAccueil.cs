@@ -45,6 +45,7 @@ namespace ApliSportfSioAp
         {
             btnEnvoyer_Click_1(sender, e);// Charge les sportifs dès l'ouverture du formulaire
         }
+
         // Bouton Rechercher
         private void btnEnvoyer_Click_1(object sender, EventArgs e)
         {
@@ -60,61 +61,85 @@ namespace ApliSportfSioAp
             string valeur = txtValeur.Text.Trim(); // Récupère la valeur saisie
 
             string chConnexion = ConfigurationManager.ConnectionStrings["cnxBdSport"].ConnectionString;
-            using (MySqlConnection cnx = new MySqlConnection(chConnexion))
+            try
             {
-                cnx.Open();
-
-                string chRequete = "SELECT s.id, s.nom, s.prenom, s.dateNais, s.rue, s.codePostal, s.ville, s.niveauExperience, sp.nomSport FROM Sportif s INNER JOIN Sport sp ON s.idSport = sp.id";
-                bool filtrer = !string.IsNullOrEmpty(valeur); // Vérifie si une valeur est saisie
-
-                if (filtrer)
+                using (MySqlConnection cnx = new MySqlConnection(chConnexion))
                 {
-                    chRequete += " WHERE ";
-                    switch (critere)
+                    cnx.Open();
+
+                    MySqlCommand cmd;
+                    bool filtrer = !string.IsNullOrEmpty(valeur); // Vérifie si une valeur est saisie
+
+                    if (!filtrer)
                     {
-                        case "Ville":
-                            chRequete += "Ville LIKE @valeur";
-                            break;
-                        case "Niveau":
-                            chRequete += "NiveauExperience = @valeur";
-                            break;
-                        case "Nom du Sport":
-                            chRequete += "NomSport LIKE @valeur";
-                            break;
+                        // Appel de la procédure stockée qui retourne tous les sportifs
+                        cmd = new MySqlCommand("CALL ToutSelectionner()", cnx);
+                    }
+                    else
+                    {
+                        // Requête paramétrée selon le critère
+                        string chRequete = "SELECT s.id, s.nom, s.prenom, s.dateNais, s.rue, s.codePostal, s.ville, s.niveauExperience, sp.nomSport FROM Sportif s INNER JOIN Sport sp ON s.idSport = sp.id WHERE ";
+                        switch (critere)
+                        {
+                            case "Ville":
+                                chRequete += "s.Ville LIKE @valeur";
+                                break;
+                            case "Niveau":
+                                chRequete += "s.niveauExperience = @valeur";
+                                break;
+                            case "Nom du Sport":
+                                chRequete += "sp.nomSport LIKE @valeur";
+                                break;
+                            default:
+                                chRequete += "1=1";
+                                break;
+                        }
+
+                        cmd = new MySqlCommand(chRequete, cnx);
+
+                        if (critere == "Niveau" && int.TryParse(valeur, out int niveau))
+                            cmd.Parameters.AddWithValue("@valeur", niveau); // Filtre exact pour niveau
+                        else
+                            cmd.Parameters.AddWithValue("@valeur", "%" + valeur + "%"); // Filtre partiel
+                    }
+
+                    using (MySqlDataReader rd = cmd.ExecuteReader())
+                    {
+                        while (rd.Read())
+                        {
+                            // Lecture sûre des colonnes avec vérification des DBNull
+                            int id = rd.IsDBNull(0) ? 0 : rd.GetInt32(0);
+                            string nom = rd.IsDBNull(1) ? string.Empty : rd.GetString(1);
+                            string prenom = rd.IsDBNull(2) ? string.Empty : rd.GetString(2);
+                            string dateStr = rd.IsDBNull(3) ? string.Empty : rd.GetDateTime(3).ToShortDateString();
+                            string rue = rd.IsDBNull(4) ? string.Empty : rd.GetString(4);
+                            string cp = rd.IsDBNull(5) ? string.Empty : rd.GetString(5);
+                            string ville = rd.IsDBNull(6) ? string.Empty : rd.GetString(6);
+                            string niveauStr = rd.IsDBNull(7) ? "0" : rd.GetInt32(7).ToString();
+                            string sport = rd.IsDBNull(8) ? string.Empty : rd.GetString(8);
+
+                            // Crée un item pour chaque sportif
+                            ListViewItem item = new ListViewItem(id.ToString());
+                            item.SubItems.Add(nom);
+                            item.SubItems.Add(prenom);
+                            item.SubItems.Add(dateStr);
+                            item.SubItems.Add(rue);
+                            item.SubItems.Add(cp);
+                            item.SubItems.Add(ville);
+                            item.SubItems.Add(niveauStr);
+                            item.SubItems.Add(sport);
+
+                            listSportifs.Items.Add(item); // Ajoute à la ListView
+                        }
                     }
                 }
-
-                MySqlCommand cmd = new MySqlCommand(chRequete, cnx);
-
-                if (filtrer)
-                {
-                    if (critere == "Niveau" && int.TryParse(valeur, out int niveau))
-                        cmd.Parameters.AddWithValue("@valeur", niveau); // Filtre exact pour niveau
-                    else
-                        cmd.Parameters.AddWithValue("@valeur", "%" + valeur + "%"); // Filtre partiel
-                }
-
-                MySqlDataReader rd = cmd.ExecuteReader();
-
-                while (rd.Read())
-                {
-                    // Crée un item pour chaque sportif
-                    ListViewItem item = new ListViewItem(rd.GetInt32(0).ToString());
-                    item.SubItems.Add(rd.GetString(1));
-                    item.SubItems.Add(rd.GetString(2));
-                    item.SubItems.Add(rd.GetDateTime(3).ToShortDateString());
-                    item.SubItems.Add(rd.GetString(4));
-                    item.SubItems.Add(rd.GetString(5));
-                    item.SubItems.Add(rd.GetString(6));
-                    item.SubItems.Add(rd.GetInt32(7).ToString());
-                    item.SubItems.Add(rd.GetString(8));
-
-                    listSportifs.Items.Add(item); // Ajoute à la ListView
-                }
-
-                rd.Close(); // Ferme le lecteur
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erreur lors de la récupération des sportifs : " + ex.Message);
             }
         }
+
         private void btnQuitter_Click_1(object sender, EventArgs e)
         {
             this.Close();// Ferme le formulaire
@@ -143,8 +168,7 @@ namespace ApliSportfSioAp
                     contextMenuStrip1.Show(listSportifs, e.Location);// Affiche le menu
                 }
             }
-            }
-        
+        }
 
         // Actions du menu contextuel
         private void modifierToolStripMenuItem_Click(object sender, EventArgs e)
@@ -240,5 +264,4 @@ namespace ApliSportfSioAp
             btnEnvoyer_Click_1(null, null);
         }
     }
-    }
-
+}

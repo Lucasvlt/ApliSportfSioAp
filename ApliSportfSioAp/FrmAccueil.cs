@@ -263,5 +263,12 @@ namespace ApliSportfSioAp
             // Recharge la liste après ajout
             btnEnvoyer_Click_1(null, null);
         }
+        private void btnGererSports_Click(object sender, EventArgs e)
+        {
+            using (var frm = new FrmSports())
+            {
+                frm.ShowDialog();
+            }
+        }
     }
 }

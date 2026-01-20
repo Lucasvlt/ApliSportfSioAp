@@ -33,6 +33,8 @@
             this.fichierToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mnSportif = new System.Windows.Forms.ToolStripMenuItem();
             this.modificationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.gestionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.gererSportsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.btnEnvoyer = new System.Windows.Forms.Button();
             this.btnQuitter = new System.Windows.Forms.Button();
             this.listSportifs = new System.Windows.Forms.ListView();
@@ -43,6 +45,7 @@
             this.modifierToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.supprimerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.btnAjouter = new System.Windows.Forms.Button();
+            this.btnGererSports = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -52,12 +55,13 @@
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fichierToolStripMenuItem,
             this.mnSportif,
-            this.modificationToolStripMenuItem});
+            this.modificationToolStripMenuItem,
+            this.gestionToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(800, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(900, 24);
             this.menuStrip1.TabIndex = 0;
-            this.menuStrip1.Text = "Quitter";
+            this.menuStrip1.Text = "Menu principal";
             // 
             // fichierToolStripMenuItem
             // 
@@ -76,9 +80,24 @@
             this.modificationToolStripMenuItem.Name = "modificationToolStripMenuItem";
             this.modificationToolStripMenuItem.Size = new System.Drawing.Size(12, 20);
             // 
+            // gestionToolStripMenuItem
+            // 
+            this.gestionToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.gererSportsToolStripMenuItem});
+            this.gestionToolStripMenuItem.Name = "gestionToolStripMenuItem";
+            this.gestionToolStripMenuItem.Size = new System.Drawing.Size(57, 20);
+            this.gestionToolStripMenuItem.Text = "Gestion";
+            // 
+            // gererSportsToolStripMenuItem
+            // 
+            this.gererSportsToolStripMenuItem.Name = "gererSportsToolStripMenuItem";
+            this.gererSportsToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
+            this.gererSportsToolStripMenuItem.Text = "Gérer les sports";
+            this.gererSportsToolStripMenuItem.Click += new System.EventHandler(this.btnGererSports_Click);
+            // 
             // btnEnvoyer
             // 
-            this.btnEnvoyer.Location = new System.Drawing.Point(713, 47);
+            this.btnEnvoyer.Location = new System.Drawing.Point(813, 47);
             this.btnEnvoyer.Name = "btnEnvoyer";
             this.btnEnvoyer.Size = new System.Drawing.Size(75, 23);
             this.btnEnvoyer.TabIndex = 1;
@@ -88,7 +107,7 @@
             // 
             // btnQuitter
             // 
-            this.btnQuitter.Location = new System.Drawing.Point(713, 361);
+            this.btnQuitter.Location = new System.Drawing.Point(813, 361);
             this.btnQuitter.Name = "btnQuitter";
             this.btnQuitter.Size = new System.Drawing.Size(75, 23);
             this.btnQuitter.TabIndex = 2;
@@ -102,7 +121,7 @@
             this.listSportifs.HideSelection = false;
             this.listSportifs.Location = new System.Drawing.Point(92, 89);
             this.listSportifs.Name = "listSportifs";
-            this.listSportifs.Size = new System.Drawing.Size(586, 295);
+            this.listSportifs.Size = new System.Drawing.Size(686, 295);
             this.listSportifs.TabIndex = 3;
             this.listSportifs.UseCompatibleStateImageBehavior = false;
             this.listSportifs.SelectedIndexChanged += new System.EventHandler(this.listSportifs_SelectedIndexChanged);
@@ -156,7 +175,7 @@
             // 
             // btnAjouter
             // 
-            this.btnAjouter.Location = new System.Drawing.Point(713, 76);
+            this.btnAjouter.Location = new System.Drawing.Point(813, 76);
             this.btnAjouter.Name = "btnAjouter";
             this.btnAjouter.Size = new System.Drawing.Size(81, 32);
             this.btnAjouter.TabIndex = 19;
@@ -164,12 +183,23 @@
             this.btnAjouter.UseVisualStyleBackColor = true;
             this.btnAjouter.Click += new System.EventHandler(this.btnAjouter_Click);
             // 
+            // btnGererSports
+            // 
+            this.btnGererSports.Location = new System.Drawing.Point(708, 47);
+            this.btnGererSports.Name = "btnGererSports";
+            this.btnGererSports.Size = new System.Drawing.Size(90, 23);
+            this.btnGererSports.TabIndex = 20;
+            this.btnGererSports.Text = "Gérer les sports";
+            this.btnGererSports.UseVisualStyleBackColor = true;
+            this.btnGererSports.Click += new System.EventHandler(this.btnGererSports_Click);
+            // 
             // FrmAccueil
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(900, 480);
+            this.Controls.Add(this.btnGererSports);
             this.Controls.Add(this.btnAjouter);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.txtValeur);
@@ -206,6 +236,9 @@
         private System.Windows.Forms.ToolStripMenuItem modifierToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem supprimerToolStripMenuItem;
         private System.Windows.Forms.Button btnAjouter;
-    }
+        private System.Windows.Forms.Button btnGererSports;
+        private System.Windows.Forms.ToolStripMenuItem gestionToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem gererSportsToolStripMenuItem;
+    }   
 }
 

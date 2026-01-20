@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Configuration;
+using System.Data;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
 
@@ -9,7 +10,7 @@ namespace ApliSportfSioAp
     {
         private int idSportif;
 
-        // 🔧 Constructeur pour modification
+        // Constructeur pour modification
         public FrmModification(int idSportif, string nom, string prenom, DateTime dateNaissance, string rue, string codePostal, string ville, int niveau, string sport)
         {
             InitializeComponent();
@@ -23,19 +24,35 @@ namespace ApliSportfSioAp
             txtCodePostal.Text = codePostal;
             txtVille.Text = ville;
             txtNiveau.Text = niveau.ToString();
-            txtSport.Text = sport;
+
+            LoadSportsCombo();
+
+            // Sélectionne le sport correspondant par nom (si présent)
+            if (!string.IsNullOrWhiteSpace(sport) && cbSport.Items.Count > 0)
+            {
+                for (int i = 0; i < cbSport.Items.Count; i++)
+                {
+                    var drv = cbSport.Items[i] as DataRowView;
+                    if (drv != null && string.Equals(drv["nomSport"].ToString(), sport, StringComparison.OrdinalIgnoreCase))
+                    {
+                        cbSport.SelectedIndex = i;
+                        break;
+                    }
+                }
+            }
 
             ActiverModeModification();
         }
 
-        // 🔧 Constructeur pour ajout
+        // Constructeur pour ajout
         public FrmModification()
         {
             InitializeComponent();
+            LoadSportsCombo();
             ActiverModeAjout();
         }
 
-        //  Méthode pour mode ajout
+        // Méthode pour mode ajout
         private void ActiverModeAjout()
         {
             btnInserer.Visible = true;
@@ -48,8 +65,10 @@ namespace ApliSportfSioAp
             txtCodePostal.Text = "";
             txtVille.Text = "";
             txtNiveau.Text = "";
-            txtSport.Text = "";
             dtpNaissance.Value = DateTime.Today;
+
+            if (cbSport.Items.Count > 0)
+                cbSport.SelectedIndex = 0;
         }
 
         // Méthode pour mode modification
@@ -58,6 +77,33 @@ namespace ApliSportfSioAp
             btnInserer.Visible = false;
             btnModifier.Visible = true;
             this.Text = "Modification du sportif";
+        }
+
+        // Charge la combo des sports depuis la table Sport
+        private void LoadSportsCombo()
+        {
+            try
+            {
+                var dt = new DataTable();
+                string chConnexion = ConfigurationManager.ConnectionStrings["cnxBdSport"].ConnectionString;
+                using (var cnx = new MySqlConnection(chConnexion))
+                using (var cmd = new MySqlCommand("SELECT id, nomSport FROM Sport ORDER BY nomSport", cnx))
+                {
+                    cnx.Open();
+                    using (var rd = cmd.ExecuteReader())
+                    {
+                        dt.Load(rd);
+                    }
+                }
+
+                cbSport.DisplayMember = "nomSport";
+                cbSport.ValueMember = "id";
+                cbSport.DataSource = dt;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erreur lors du chargement des sports : " + ex.Message, "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         // Bouton Modifier
@@ -71,10 +117,19 @@ namespace ApliSportfSioAp
                     return;
                 }
 
+                if (cbSport.SelectedValue == null)
+                {
+                    MessageBox.Show("Veuillez sélectionner un sport.");
+                    return;
+                }
+
+                int idSport = Convert.ToInt32(cbSport.SelectedValue);
+
                 string chConnexion = ConfigurationManager.ConnectionStrings["cnxBdSport"].ConnectionString;
                 using (MySqlConnection cnx = new MySqlConnection(chConnexion))
                 {
                     cnx.Open();
+
                     string requete = @"UPDATE Sportif SET  
                                         nom = @nom,  
                                         prenom = @prenom,  
@@ -83,7 +138,7 @@ namespace ApliSportfSioAp
                                         codePostal = @codePostal,  
                                         ville = @ville,  
                                         niveauExperience = @niveau,  
-                                        nomSport = @sport  
+                                        idSport = @idSport  
                                         WHERE id = @id";
 
                     MySqlCommand cmd = new MySqlCommand(requete, cnx);
@@ -94,7 +149,7 @@ namespace ApliSportfSioAp
                     cmd.Parameters.AddWithValue("@codePostal", txtCodePostal.Text.Trim());
                     cmd.Parameters.AddWithValue("@ville", txtVille.Text.Trim());
                     cmd.Parameters.AddWithValue("@niveau", niveau);
-                    cmd.Parameters.AddWithValue("@sport", txtSport.Text.Trim());
+                    cmd.Parameters.AddWithValue("@idSport", idSport);
                     cmd.Parameters.AddWithValue("@id", idSportif);
                     cmd.ExecuteNonQuery();
                     MessageBox.Show("Sportif modifié avec succès !");
@@ -118,9 +173,9 @@ namespace ApliSportfSioAp
                     string.IsNullOrWhiteSpace(txtRue.Text) ||
                     string.IsNullOrWhiteSpace(txtCodePostal.Text) ||
                     string.IsNullOrWhiteSpace(txtVille.Text) ||
-                    string.IsNullOrWhiteSpace(txtSport.Text))
+                    cbSport.SelectedValue == null)
                 {
-                    MessageBox.Show("Tous les champs doivent être remplis.");
+                    MessageBox.Show("Tous les champs doivent être remplis et un sport sélectionné.");
                     return;
                 }
 
@@ -131,6 +186,7 @@ namespace ApliSportfSioAp
                 }
 
                 DateTime dateNaissance = dtpNaissance.Value;
+                int idSport = Convert.ToInt32(cbSport.SelectedValue);
 
                 // Connexion et insertion
                 string chConnexion = ConfigurationManager.ConnectionStrings["cnxBdSport"].ConnectionString;
@@ -139,9 +195,9 @@ namespace ApliSportfSioAp
                     cnx.Open();
 
                     string requete = @"INSERT INTO Sportif 
-                        (nom, prenom, dateNais, rue, codePostal, ville, niveauExperience, nomSport) 
+                        (nom, prenom, dateNais, rue, codePostal, ville, niveauExperience, idSport) 
                         VALUES 
-                        (@nom, @prenom, @dateNaissance, @rue, @codePostal, @ville, @niveau, @sport)";
+                        (@nom, @prenom, @dateNaissance, @rue, @codePostal, @ville, @niveau, @idSport)";
 
                     MySqlCommand cmd = new MySqlCommand(requete, cnx);
                     cmd.Parameters.AddWithValue("@nom", txtNom.Text.Trim());
@@ -151,7 +207,7 @@ namespace ApliSportfSioAp
                     cmd.Parameters.AddWithValue("@codePostal", txtCodePostal.Text.Trim());
                     cmd.Parameters.AddWithValue("@ville", txtVille.Text.Trim());
                     cmd.Parameters.AddWithValue("@niveau", niveau);
-                    cmd.Parameters.AddWithValue("@sport", txtSport.Text.Trim());
+                    cmd.Parameters.AddWithValue("@idSport", idSport);
 
                     cmd.ExecuteNonQuery();
                     MessageBox.Show("Sportif ajouté avec succès !");
@@ -163,7 +219,5 @@ namespace ApliSportfSioAp
                 MessageBox.Show("Erreur lors de l'insertion : " + ex.Message);
             }
         }
-
-        
     }
 }

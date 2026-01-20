@@ -107,16 +107,16 @@ namespace ApliSportfSioAp
                     {
                         while (rd.Read())
                         {
-                            // Lecture sûre des colonnes avec vérification des DBNull
-                            int id = rd.IsDBNull(0) ? 0 : rd.GetInt32(0);
-                            string nom = rd.IsDBNull(1) ? string.Empty : rd.GetString(1);
-                            string prenom = rd.IsDBNull(2) ? string.Empty : rd.GetString(2);
-                            string dateStr = rd.IsDBNull(3) ? string.Empty : rd.GetDateTime(3).ToShortDateString();
-                            string rue = rd.IsDBNull(4) ? string.Empty : rd.GetString(4);
-                            string cp = rd.IsDBNull(5) ? string.Empty : rd.GetString(5);
-                            string ville = rd.IsDBNull(6) ? string.Empty : rd.GetString(6);
-                            string niveauStr = rd.IsDBNull(7) ? "0" : rd.GetInt32(7).ToString();
-                            string sport = rd.IsDBNull(8) ? string.Empty : rd.GetString(8);
+                            // Lecture simple des colonnes 
+                            int id = rd.GetInt32(0);
+                            string nom = rd.GetString(1);
+                            string prenom = rd.GetString(2);
+                            string dateStr = rd.GetDateTime(3).ToShortDateString();
+                            string rue = rd.GetString(4);
+                            string cp = rd.GetString(5);
+                            string ville = rd.GetString(6);
+                            string niveauStr = rd.GetInt32(7).ToString();
+                            string sport = rd.GetString(8);
 
                             // Crée un item pour chaque sportif
                             ListViewItem item = new ListViewItem(id.ToString());

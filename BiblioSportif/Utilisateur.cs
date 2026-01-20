@@ -22,5 +22,7 @@ namespace BiblioSportif
         public int Id { get => id; set => id = value; }
         public string Login { get => login; set => login = value; }
         public string MotDePasse { get => motDePasse; set => motDePasse = value; }
+
+
     }
 }

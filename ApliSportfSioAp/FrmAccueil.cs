@@ -7,18 +7,18 @@ namespace ApliSportfSioAp
 {
     public partial class FrmAccueil : Form
     {
-        private string login; // Stocke le login de l'utilisateur connecté
+        private string login;
 
         public FrmAccueil(string login)
         {
-            InitializeComponent(); // Initialise les composants graphiques
-            this.login = login;    // Stocke le login reçu
+            InitializeComponent();
+            this.login = login;
 
             // Ajoute les critères de recherche dans la ComboBox
             comboBoxCritere.Items.Add("Ville");
             comboBoxCritere.Items.Add("Niveau");
             comboBoxCritere.Items.Add("Nom du Sport");
-            comboBoxCritere.SelectedIndex = 0; // Sélectionne le premier critère par défaut
+            comboBoxCritere.SelectedIndex = 0;
 
             // Configure la ListView pour afficher les sportifs
             listSportifs.View = View.Details;
@@ -57,8 +57,8 @@ namespace ApliSportfSioAp
                 return;
             }
 
-            string critere = comboBoxCritere.SelectedItem.ToString(); // Récupère le critère
-            string valeur = txtValeur.Text.Trim(); // Récupère la valeur saisie
+            string critere = comboBoxCritere.SelectedItem.ToString();
+            string valeur = txtValeur.Text.Trim();
 
             string chConnexion = ConfigurationManager.ConnectionStrings["cnxBdSport"].ConnectionString;
             try
@@ -68,12 +68,17 @@ namespace ApliSportfSioAp
                     cnx.Open();
 
                     MySqlCommand cmd;
-                    bool filtrer = !string.IsNullOrEmpty(valeur); // Vérifie si une valeur est saisie
+                    bool filtrer = !string.IsNullOrEmpty(valeur);
+
+                    string baseSelect = @"SELECT s.id, s.nom, s.prenom, s.dateNais, s.rue, s.codePostal, s.ville, s.niveauExperience,
+                                         IFNULL(GROUP_CONCAT(sp.nomSport SEPARATOR ', '), '') AS Sports
+                                         FROM Sportif s
+                                         LEFT JOIN Participe p ON s.id = p.idSportif
+                                         LEFT JOIN Sport sp ON p.idSport = sp.id";
 
                     if (!filtrer)
                     {
-                        // Appel de la procédure stockée qui retourne tous les sportifs
-                        cmd = new MySqlCommand("CALL ToutSelectionner()", cnx);
+                        cmd = new MySqlCommand(baseSelect + " GROUP BY s.id, s.nom, s.prenom, s.dateNais, s.rue, s.codePostal, s.ville, s.niveauExperience", cnx);
                     }
                     else
                     {
@@ -268,6 +273,19 @@ namespace ApliSportfSioAp
             using (var frm = new FrmSports())
             {
                 frm.ShowDialog();
+            }
+        }
+
+        // Remplace ta méthode vide par celle-ci :
+        private void btnAjouter_Click_1(object sender, EventArgs e)
+        {
+            // On appelle FrmModification sans paramètres pour le mode "Insertion"
+            FrmModification frmAjout = new FrmModification();
+
+            if (frmAjout.ShowDialog() == DialogResult.OK || true)
+            {
+                // On rafraîchit la liste automatiquement après l'ajout
+                btnEnvoyer_Click_1(null, null);
             }
         }
     }

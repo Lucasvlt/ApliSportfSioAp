@@ -18,14 +18,11 @@
         private System.Windows.Forms.Label lblNiveau;
         private System.Windows.Forms.TextBox txtNiveau;
         private System.Windows.Forms.Label lblSport;
-        private System.Windows.Forms.ComboBox cbSport;
+        // CHANGEMENT ICI : CheckedListBox au lieu de ComboBox pour correspondre à ton code C#
+        private System.Windows.Forms.CheckedListBox clbSports;
         private System.Windows.Forms.Button btnInserer;
         private System.Windows.Forms.Button btnModifier;
 
-        /// <summary> 
-        /// Nettoyage des ressources utilisées.
-        /// </summary>
-        /// <param name="disposing"></param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -52,187 +49,78 @@
             this.lblNiveau = new System.Windows.Forms.Label();
             this.txtNiveau = new System.Windows.Forms.TextBox();
             this.lblSport = new System.Windows.Forms.Label();
-            this.cbSport = new System.Windows.Forms.ComboBox();
+            this.clbSports = new System.Windows.Forms.CheckedListBox();
             this.btnInserer = new System.Windows.Forms.Button();
             this.btnModifier = new System.Windows.Forms.Button();
             this.SuspendLayout();
-            // 
-            // lblNom
-            // 
-            this.lblNom.AutoSize = true;
+
+            // Positions et tailles
             this.lblNom.Location = new System.Drawing.Point(12, 15);
-            this.lblNom.Name = "lblNom";
-            this.lblNom.Size = new System.Drawing.Size(29, 13);
-            this.lblNom.TabIndex = 0;
-            this.lblNom.Text = "Nom";
-            // 
-            // txtNom
-            // 
-            this.txtNom.Location = new System.Drawing.Point(95, 12);
-            this.txtNom.Name = "txtNom";
-            this.txtNom.Size = new System.Drawing.Size(250, 20);
-            this.txtNom.TabIndex = 1;
-            // 
-            // lblPrenom
-            // 
-            this.lblPrenom.AutoSize = true;
+            this.lblNom.Text = "Nom :";
+            this.txtNom.Location = new System.Drawing.Point(110, 12);
+            this.txtNom.Size = new System.Drawing.Size(230, 20);
+
             this.lblPrenom.Location = new System.Drawing.Point(12, 45);
-            this.lblPrenom.Name = "lblPrenom";
-            this.lblPrenom.Size = new System.Drawing.Size(43, 13);
-            this.lblPrenom.TabIndex = 2;
-            this.lblPrenom.Text = "Prénom";
-            // 
-            // txtPrenom
-            // 
-            this.txtPrenom.Location = new System.Drawing.Point(95, 42);
-            this.txtPrenom.Name = "txtPrenom";
-            this.txtPrenom.Size = new System.Drawing.Size(250, 20);
-            this.txtPrenom.TabIndex = 3;
-            // 
-            // lblNaissance
-            // 
-            this.lblNaissance.AutoSize = true;
+            this.lblPrenom.Text = "Prénom :";
+            this.txtPrenom.Location = new System.Drawing.Point(110, 42);
+            this.txtPrenom.Size = new System.Drawing.Size(230, 20);
+
             this.lblNaissance.Location = new System.Drawing.Point(12, 75);
-            this.lblNaissance.Name = "lblNaissance";
-            this.lblNaissance.Size = new System.Drawing.Size(92, 13);
-            this.lblNaissance.TabIndex = 4;
-            this.lblNaissance.Text = "Date de naissance";
-            // 
-            // dtpNaissance
-            // 
-            this.dtpNaissance.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.lblNaissance.Text = "Naissance :";
             this.dtpNaissance.Location = new System.Drawing.Point(110, 72);
-            this.dtpNaissance.Name = "dtpNaissance";
-            this.dtpNaissance.Size = new System.Drawing.Size(120, 20);
-            this.dtpNaissance.TabIndex = 5;
-            // 
-            // lblRue
-            // 
-            this.lblRue.AutoSize = true;
+            this.dtpNaissance.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+
             this.lblRue.Location = new System.Drawing.Point(12, 105);
-            this.lblRue.Name = "lblRue";
-            this.lblRue.Size = new System.Drawing.Size(28, 13);
-            this.lblRue.TabIndex = 6;
-            this.lblRue.Text = "Rue";
-            // 
-            // txtRue
-            // 
-            this.txtRue.Location = new System.Drawing.Point(95, 102);
-            this.txtRue.Name = "txtRue";
-            this.txtRue.Size = new System.Drawing.Size(250, 20);
-            this.txtRue.TabIndex = 7;
-            // 
-            // lblCodePostal
-            // 
-            this.lblCodePostal.AutoSize = true;
+            this.lblRue.Text = "Rue :";
+            this.txtRue.Location = new System.Drawing.Point(110, 102);
+            this.txtRue.Size = new System.Drawing.Size(230, 20);
+
             this.lblCodePostal.Location = new System.Drawing.Point(12, 135);
-            this.lblCodePostal.Name = "lblCodePostal";
-            this.lblCodePostal.Size = new System.Drawing.Size(67, 13);
-            this.lblCodePostal.TabIndex = 8;
-            this.lblCodePostal.Text = "Code postal";
-            // 
-            // txtCodePostal
-            // 
-            this.txtCodePostal.Location = new System.Drawing.Point(95, 132);
-            this.txtCodePostal.Name = "txtCodePostal";
-            this.txtCodePostal.Size = new System.Drawing.Size(120, 20);
-            this.txtCodePostal.TabIndex = 9;
-            // 
-            // lblVille
-            // 
-            this.lblVille.AutoSize = true;
+            this.lblCodePostal.Text = "Code Postal :";
+            this.txtCodePostal.Location = new System.Drawing.Point(110, 132);
+            this.txtCodePostal.Size = new System.Drawing.Size(80, 20);
+
             this.lblVille.Location = new System.Drawing.Point(12, 165);
-            this.lblVille.Name = "lblVille";
-            this.lblVille.Size = new System.Drawing.Size(27, 13);
-            this.lblVille.TabIndex = 10;
-            this.lblVille.Text = "Ville";
-            // 
-            // txtVille
-            // 
-            this.txtVille.Location = new System.Drawing.Point(95, 162);
-            this.txtVille.Name = "txtVille";
-            this.txtVille.Size = new System.Drawing.Size(250, 20);
-            this.txtVille.TabIndex = 11;
-            // 
-            // lblNiveau
-            // 
-            this.lblNiveau.AutoSize = true;
+            this.lblVille.Text = "Ville :";
+            this.txtVille.Location = new System.Drawing.Point(110, 162);
+            this.txtVille.Size = new System.Drawing.Size(230, 20);
+
             this.lblNiveau.Location = new System.Drawing.Point(12, 195);
-            this.lblNiveau.Name = "lblNiveau";
-            this.lblNiveau.Size = new System.Drawing.Size(41, 13);
-            this.lblNiveau.TabIndex = 12;
-            this.lblNiveau.Text = "Niveau";
-            // 
-            // txtNiveau
-            // 
-            this.txtNiveau.Location = new System.Drawing.Point(95, 192);
-            this.txtNiveau.Name = "txtNiveau";
-            this.txtNiveau.Size = new System.Drawing.Size(60, 20);
-            this.txtNiveau.TabIndex = 13;
-            // 
-            // lblSport
-            // 
-            this.lblSport.AutoSize = true;
+            this.lblNiveau.Text = "Niveau (1-10) :";
+            this.txtNiveau.Location = new System.Drawing.Point(110, 192);
+            this.txtNiveau.Size = new System.Drawing.Size(40, 20);
+
             this.lblSport.Location = new System.Drawing.Point(12, 225);
-            this.lblSport.Name = "lblSport";
-            this.lblSport.Size = new System.Drawing.Size(29, 13);
-            this.lblSport.TabIndex = 14;
-            this.lblSport.Text = "Sport";
-            // 
-            // cbSport
-            // 
-            this.cbSport.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbSport.FormattingEnabled = true;
-            this.cbSport.Location = new System.Drawing.Point(95, 222);
-            this.cbSport.Name = "cbSport";
-            this.cbSport.Size = new System.Drawing.Size(250, 21);
-            this.cbSport.TabIndex = 15;
-            // 
-            // btnInserer
-            // 
-            this.btnInserer.Location = new System.Drawing.Point(95, 260);
-            this.btnInserer.Name = "btnInserer";
-            this.btnInserer.Size = new System.Drawing.Size(90, 30);
-            this.btnInserer.TabIndex = 16;
-            this.btnInserer.Text = "Inserer";
-            this.btnInserer.UseVisualStyleBackColor = true;
+            this.lblSport.Text = "Sports pratiqués :";
+
+            // CheckedListBox config
+            this.clbSports.FormattingEnabled = true;
+            this.clbSports.Location = new System.Drawing.Point(110, 222);
+            this.clbSports.Name = "clbSports";
+            this.clbSports.Size = new System.Drawing.Size(230, 94);
+            this.clbSports.CheckOnClick = true;
+
+            // Boutons (Superposés ou côte à côte)
+            this.btnInserer.Location = new System.Drawing.Point(150, 330);
+            this.btnInserer.Text = "Ajouter";
             this.btnInserer.Click += new System.EventHandler(this.btnInserer_Click);
-            // 
-            // btnModifier
-            // 
-            this.btnModifier.Location = new System.Drawing.Point(200, 260);
-            this.btnModifier.Name = "btnModifier";
-            this.btnModifier.Size = new System.Drawing.Size(90, 30);
-            this.btnModifier.TabIndex = 17;
+
+            this.btnModifier.Location = new System.Drawing.Point(150, 330);
             this.btnModifier.Text = "Modifier";
-            this.btnModifier.UseVisualStyleBackColor = true;
             this.btnModifier.Click += new System.EventHandler(this.btnModifier_Click);
-            // 
-            // FrmModification
-            // 
-            this.ClientSize = new System.Drawing.Size(370, 310);
-            this.Controls.Add(this.btnModifier);
-            this.Controls.Add(this.btnInserer);
-            this.Controls.Add(this.cbSport);
-            this.Controls.Add(this.lblSport);
-            this.Controls.Add(this.txtNiveau);
-            this.Controls.Add(this.lblNiveau);
-            this.Controls.Add(this.txtVille);
-            this.Controls.Add(this.lblVille);
-            this.Controls.Add(this.txtCodePostal);
-            this.Controls.Add(this.lblCodePostal);
-            this.Controls.Add(this.txtRue);
-            this.Controls.Add(this.lblRue);
-            this.Controls.Add(this.dtpNaissance);
-            this.Controls.Add(this.lblNaissance);
-            this.Controls.Add(this.txtPrenom);
-            this.Controls.Add(this.lblPrenom);
-            this.Controls.Add(this.txtNom);
-            this.Controls.Add(this.lblNom);
+
+            // Fenêtre
+            this.ClientSize = new System.Drawing.Size(360, 380);
+            this.Controls.AddRange(new System.Windows.Forms.Control[] {
+                this.btnModifier, this.btnInserer, this.clbSports, this.lblSport,
+                this.txtNiveau, this.lblNiveau, this.txtVille, this.lblVille,
+                this.txtCodePostal, this.lblCodePostal, this.txtRue, this.lblRue,
+                this.dtpNaissance, this.lblNaissance, this.txtPrenom, this.lblPrenom,
+                this.txtNom, this.lblNom
+            });
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.Name = "FrmModification";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Modification / Ajout";
+            this.Text = "Détails Sportif";
             this.ResumeLayout(false);
             this.PerformLayout();
         }

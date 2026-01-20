@@ -25,22 +25,8 @@ namespace ApliSportfSioAp
             txtVille.Text = ville;
             txtNiveau.Text = niveau.ToString();
 
-            LoadSportsCombo();
-
-            // Sélectionne le sport correspondant par nom (si présent)
-            if (!string.IsNullOrWhiteSpace(sport) && cbSport.Items.Count > 0)
-            {
-                for (int i = 0; i < cbSport.Items.Count; i++)
-                {
-                    var drv = cbSport.Items[i] as DataRowView;
-                    if (drv != null && string.Equals(drv["nomSport"].ToString(), sport, StringComparison.OrdinalIgnoreCase))
-                    {
-                        cbSport.SelectedIndex = i;
-                        break;
-                    }
-                }
-            }
-
+            LoadSportsChecked();
+            LoadSelectedSports();
             ActiverModeModification();
         }
 
@@ -48,11 +34,10 @@ namespace ApliSportfSioAp
         public FrmModification()
         {
             InitializeComponent();
-            LoadSportsCombo();
+            LoadSportsChecked();
             ActiverModeAjout();
         }
 
-        // Méthode pour mode ajout
         private void ActiverModeAjout()
         {
             btnInserer.Visible = true;
@@ -66,12 +51,8 @@ namespace ApliSportfSioAp
             txtVille.Text = "";
             txtNiveau.Text = "";
             dtpNaissance.Value = DateTime.Today;
-
-            if (cbSport.Items.Count > 0)
-                cbSport.SelectedIndex = 0;
         }
 
-        // Méthode pour mode modification
         private void ActiverModeModification()
         {
             btnInserer.Visible = false;
@@ -79,12 +60,12 @@ namespace ApliSportfSioAp
             this.Text = "Modification du sportif";
         }
 
-        // Charge la combo des sports depuis la table Sport
-        private void LoadSportsCombo()
+        // Charge la liste des sports dans la CheckedListBox
+        private void LoadSportsChecked()
         {
             try
             {
-                var dt = new DataTable();
+                clbSports.Items.Clear();
                 string chConnexion = ConfigurationManager.ConnectionStrings["cnxBdSport"].ConnectionString;
                 using (var cnx = new MySqlConnection(chConnexion))
                 using (var cmd = new MySqlCommand("SELECT id, nomSport FROM Sport ORDER BY nomSport", cnx))
@@ -92,17 +73,49 @@ namespace ApliSportfSioAp
                     cnx.Open();
                     using (var rd = cmd.ExecuteReader())
                     {
-                        dt.Load(rd);
+                        while (rd.Read())
+                        {
+                            int id = rd.GetInt32("id");
+                            string nom = rd.GetString("nomSport");
+                            clbSports.Items.Add(new SportItem { Id = id, Name = nom });
+                        }
                     }
                 }
-
-                cbSport.DisplayMember = "nomSport";
-                cbSport.ValueMember = "id";
-                cbSport.DataSource = dt;
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Erreur lors du chargement des sports : " + ex.Message, "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        // Charge les sports liés au sportif et coche les éléments correspondants
+        private void LoadSelectedSports()
+        {
+            try
+            {
+                string chConnexion = ConfigurationManager.ConnectionStrings["cnxBdSport"].ConnectionString;
+                using (var cnx = new MySqlConnection(chConnexion))
+                using (var cmd = new MySqlCommand("SELECT idSport FROM Participe WHERE idSportif = @idSportif", cnx))
+                {
+                    cmd.Parameters.AddWithValue("@idSportif", idSportif);
+                    cnx.Open();
+                    using (var rd = cmd.ExecuteReader())
+                    {
+                        var ids = new System.Collections.Generic.HashSet<int>();
+                        while (rd.Read())
+                            ids.Add(rd.GetInt32("idSport"));
+                        for (int i = 0; i < clbSports.Items.Count; i++)
+                        {
+                            var si = clbSports.Items[i] as SportItem;
+                            if (si != null && ids.Contains(si.Id))
+                                clbSports.SetItemChecked(i, true);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erreur lors du chargement des sports du sportif : " + ex.Message, "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -117,13 +130,12 @@ namespace ApliSportfSioAp
                     return;
                 }
 
-                if (cbSport.SelectedValue == null)
+                var sportsSelectionnes = GetSelectedSportIds();
+                if (sportsSelectionnes.Count == 0)
                 {
-                    MessageBox.Show("Veuillez sélectionner un sport.");
+                    MessageBox.Show("Veuillez sélectionner au moins un sport.");
                     return;
                 }
-
-                int idSport = Convert.ToInt32(cbSport.SelectedValue);
 
                 string chConnexion = ConfigurationManager.ConnectionStrings["cnxBdSport"].ConnectionString;
                 using (MySqlConnection cnx = new MySqlConnection(chConnexion))
@@ -137,8 +149,7 @@ namespace ApliSportfSioAp
                                         rue = @rue,  
                                         codePostal = @codePostal,  
                                         ville = @ville,  
-                                        niveauExperience = @niveau,  
-                                        idSport = @idSport  
+                                        niveauExperience = @niveau
                                         WHERE id = @id";
 
                     MySqlCommand cmd = new MySqlCommand(requete, cnx);
@@ -149,9 +160,30 @@ namespace ApliSportfSioAp
                     cmd.Parameters.AddWithValue("@codePostal", txtCodePostal.Text.Trim());
                     cmd.Parameters.AddWithValue("@ville", txtVille.Text.Trim());
                     cmd.Parameters.AddWithValue("@niveau", niveau);
-                    cmd.Parameters.AddWithValue("@idSport", idSport);
                     cmd.Parameters.AddWithValue("@id", idSportif);
                     cmd.ExecuteNonQuery();
+
+                    using (var tr = cnx.BeginTransaction())
+                    {
+                        using (var del = new MySqlCommand("DELETE FROM Participe WHERE idSportif = @idSportif", cnx, tr))
+                        {
+                            del.Parameters.AddWithValue("@idSportif", idSportif);
+                            del.ExecuteNonQuery();
+                        }
+
+                        using (var ins = new MySqlCommand("INSERT INTO Participe (idSportif, idSport) VALUES (@idSportif, @idSport)", cnx, tr))
+                        {
+                            ins.Parameters.AddWithValue("@idSportif", idSportif);
+                            var pId = ins.Parameters.Add("@idSport", MySqlDbType.Int32);
+                            foreach (var sid in sportsSelectionnes)
+                            {
+                                pId.Value = sid;
+                                ins.ExecuteNonQuery();
+                            }
+                        }
+                        tr.Commit();
+                    }
+
                     MessageBox.Show("Sportif modifié avec succès !");
                     this.Close();
                 }
@@ -167,13 +199,11 @@ namespace ApliSportfSioAp
         {
             try
             {
-                // Vérification des champs obligatoires
                 if (string.IsNullOrWhiteSpace(txtNom.Text) ||
                     string.IsNullOrWhiteSpace(txtPrenom.Text) ||
                     string.IsNullOrWhiteSpace(txtRue.Text) ||
                     string.IsNullOrWhiteSpace(txtCodePostal.Text) ||
-                    string.IsNullOrWhiteSpace(txtVille.Text) ||
-                    cbSport.SelectedValue == null)
+                    string.IsNullOrWhiteSpace(txtVille.Text))
                 {
                     MessageBox.Show("Tous les champs doivent être remplis et un sport sélectionné.");
                     return;
@@ -185,31 +215,56 @@ namespace ApliSportfSioAp
                     return;
                 }
 
-                DateTime dateNaissance = dtpNaissance.Value;
-                int idSport = Convert.ToInt32(cbSport.SelectedValue);
+                var sportsSelectionnes = GetSelectedSportIds();
+                if (sportsSelectionnes.Count == 0)
+                {
+                    MessageBox.Show("Veuillez sélectionner au moins un sport.");
+                    return;
+                }
 
-                // Connexion et insertion
+                DateTime dateNaissance = dtpNaissance.Value;
                 string chConnexion = ConfigurationManager.ConnectionStrings["cnxBdSport"].ConnectionString;
                 using (MySqlConnection cnx = new MySqlConnection(chConnexion))
                 {
                     cnx.Open();
 
                     string requete = @"INSERT INTO Sportif 
-                        (nom, prenom, dateNais, rue, codePostal, ville, niveauExperience, idSport) 
+                        (nom, prenom, dateNais, rue, codePostal, ville, niveauExperience) 
                         VALUES 
-                        (@nom, @prenom, @dateNaissance, @rue, @codePostal, @ville, @niveau, @idSport)";
+                        (@nom, @prenom, @dateNaissance, @rue, @codePostal, @ville, @niveau)";
 
-                    MySqlCommand cmd = new MySqlCommand(requete, cnx);
-                    cmd.Parameters.AddWithValue("@nom", txtNom.Text.Trim());
-                    cmd.Parameters.AddWithValue("@prenom", txtPrenom.Text.Trim());
-                    cmd.Parameters.AddWithValue("@dateNaissance", dateNaissance);
-                    cmd.Parameters.AddWithValue("@rue", txtRue.Text.Trim());
-                    cmd.Parameters.AddWithValue("@codePostal", txtCodePostal.Text.Trim());
-                    cmd.Parameters.AddWithValue("@ville", txtVille.Text.Trim());
-                    cmd.Parameters.AddWithValue("@niveau", niveau);
-                    cmd.Parameters.AddWithValue("@idSport", idSport);
+                    using (var cmd = new MySqlCommand(requete, cnx))
+                    {
+                        cmd.Parameters.AddWithValue("@nom", txtNom.Text.Trim());
+                        cmd.Parameters.AddWithValue("@prenom", txtPrenom.Text.Trim());
+                        cmd.Parameters.AddWithValue("@dateNaissance", dateNaissance);
+                        cmd.Parameters.AddWithValue("@rue", txtRue.Text.Trim());
+                        cmd.Parameters.AddWithValue("@codePostal", txtCodePostal.Text.Trim());
+                        cmd.Parameters.AddWithValue("@ville", txtVille.Text.Trim());
+                        cmd.Parameters.AddWithValue("@niveau", niveau);
 
-                    cmd.ExecuteNonQuery();
+                        cmd.ExecuteNonQuery();
+                    }
+
+                    long nouvelId;
+                    using (var idCmd = new MySqlCommand("SELECT LAST_INSERT_ID()", cnx))
+                    {
+                        nouvelId = Convert.ToInt64(idCmd.ExecuteScalar());
+                    }
+
+                    using (var tr = cnx.BeginTransaction())
+                    using (var ins = new MySqlCommand("INSERT INTO Participe (idSportif, idSport) VALUES (@idSportif, @idSport)", cnx, tr))
+                    {
+                        ins.Parameters.AddWithValue("@idSportif", nouvelId);
+                        var pId = ins.Parameters.Add("@idSport", MySqlDbType.Int32);
+                        foreach (var sid in sportsSelectionnes)
+                        {
+                            pId.Value = sid;
+                            ins.ExecuteNonQuery();
+                        }
+                        tr.Commit();
+                    }
+
                     MessageBox.Show("Sportif ajouté avec succès !");
                     this.Close();
                 }
@@ -219,5 +274,25 @@ namespace ApliSportfSioAp
                 MessageBox.Show("Erreur lors de l'insertion : " + ex.Message);
             }
         }
+
+        // Récupère les ids des sports cochés
+        private System.Collections.Generic.List<int> GetSelectedSportIds()
+        {
+            var list = new System.Collections.Generic.List<int>();
+            foreach (var o in clbSports.CheckedItems)
+            {
+                var si = o as SportItem;
+                if (si != null) list.Add(si.Id);
+            }
+            return list;
+        }
+
+        private class SportItem
+        {
+            public int Id { get; set; }
+            public string Name { get; set; }
+            public override string ToString() => Name;
+        }
+        }
     }
-}
+

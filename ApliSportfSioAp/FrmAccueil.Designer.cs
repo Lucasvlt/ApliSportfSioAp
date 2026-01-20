@@ -45,7 +45,6 @@
             this.modifierToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.supprimerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.btnAjouter = new System.Windows.Forms.Button();
-            this.btnGererSports = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -85,13 +84,13 @@
             this.gestionToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.gererSportsToolStripMenuItem});
             this.gestionToolStripMenuItem.Name = "gestionToolStripMenuItem";
-            this.gestionToolStripMenuItem.Size = new System.Drawing.Size(57, 20);
+            this.gestionToolStripMenuItem.Size = new System.Drawing.Size(59, 20);
             this.gestionToolStripMenuItem.Text = "Gestion";
             // 
             // gererSportsToolStripMenuItem
             // 
             this.gererSportsToolStripMenuItem.Name = "gererSportsToolStripMenuItem";
-            this.gererSportsToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
+            this.gererSportsToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
             this.gererSportsToolStripMenuItem.Text = "Gérer les sports";
             this.gererSportsToolStripMenuItem.Click += new System.EventHandler(this.btnGererSports_Click);
             // 
@@ -181,25 +180,14 @@
             this.btnAjouter.TabIndex = 19;
             this.btnAjouter.Text = "Ajouter";
             this.btnAjouter.UseVisualStyleBackColor = true;
-            this.btnAjouter.Click += new System.EventHandler(this.btnAjouter_Click);
-            // 
-            // btnGererSports
-            // 
-            this.btnGererSports.Location = new System.Drawing.Point(708, 47);
-            this.btnGererSports.Name = "btnGererSports";
-            this.btnGererSports.Size = new System.Drawing.Size(90, 23);
-            this.btnGererSports.TabIndex = 20;
-            this.btnGererSports.Text = "Gérer les sports";
-            this.btnGererSports.UseVisualStyleBackColor = true;
-            this.btnGererSports.Click += new System.EventHandler(this.btnGererSports_Click);
+            this.btnAjouter.Click += new System.EventHandler(this.btnAjouter_Click_1);
             // 
             // FrmAccueil
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
+            this.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.ClientSize = new System.Drawing.Size(900, 480);
-            this.Controls.Add(this.btnGererSports);
             this.Controls.Add(this.btnAjouter);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.txtValeur);
@@ -236,7 +224,6 @@
         private System.Windows.Forms.ToolStripMenuItem modifierToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem supprimerToolStripMenuItem;
         private System.Windows.Forms.Button btnAjouter;
-        private System.Windows.Forms.Button btnGererSports;
         private System.Windows.Forms.ToolStripMenuItem gestionToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem gererSportsToolStripMenuItem;
     }   

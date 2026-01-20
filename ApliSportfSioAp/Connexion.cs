@@ -165,5 +165,10 @@ namespace ApliSportfSioAp
         {
             MessageBox.Show(message, "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
+
+        private void txtLogin_TextChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }

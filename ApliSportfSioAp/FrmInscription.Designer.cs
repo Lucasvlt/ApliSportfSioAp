@@ -73,6 +73,7 @@
             this.txtLogin.Name = "txtLogin";
             this.txtLogin.Size = new System.Drawing.Size(240, 20);
             this.txtLogin.TabIndex = 2;
+            this.txtLogin.TextChanged += new System.EventHandler(this.txtLogin_TextChanged);
             // 
             // labelMotDePasse
             // 

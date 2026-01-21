@@ -49,99 +49,64 @@ namespace ApliSportfSioAp
         // Bouton Rechercher
         private void btnEnvoyer_Click_1(object sender, EventArgs e)
         {
-            listSportifs.Items.Clear(); // Vide la liste avant chaque recherche
-
-            if (comboBoxCritere.SelectedItem == null)
-            {
-                MessageBox.Show("Veuillez sélectionner un critère de recherche.");
-                return;
-            }
-
-            string critere = comboBoxCritere.SelectedItem.ToString();
+            listSportifs.Items.Clear();
+            string critere = comboBoxCritere.SelectedItem?.ToString();
             string valeur = txtValeur.Text.Trim();
-
             string chConnexion = ConfigurationManager.ConnectionStrings["cnxBdSport"].ConnectionString;
+
             try
             {
                 using (MySqlConnection cnx = new MySqlConnection(chConnexion))
                 {
                     cnx.Open();
+                    // On utilise TOUJOURS la base avec GROUP_CONCAT pour voir tous les sports
+                    string sql = @"SELECT s.id, s.nom, s.prenom, s.dateNais, s.rue, s.codePostal, s.ville, s.niveauExperience,
+                           IFNULL(GROUP_CONCAT(sp.nomSport SEPARATOR ', '), 'Aucun') AS Sports
+                           FROM Sportif s
+                           LEFT JOIN Participe p ON s.id = p.idSportif
+                           LEFT JOIN Sport sp ON p.idSport = sp.id ";
 
-                    MySqlCommand cmd;
-                    bool filtrer = !string.IsNullOrEmpty(valeur);
-
-                    string baseSelect = @"SELECT s.id, s.nom, s.prenom, s.dateNais, s.rue, s.codePostal, s.ville, s.niveauExperience,
-                                         IFNULL(GROUP_CONCAT(sp.nomSport SEPARATOR ', '), '') AS Sports
-                                         FROM Sportif s
-                                         LEFT JOIN Participe p ON s.id = p.idSportif
-                                         LEFT JOIN Sport sp ON p.idSport = sp.id";
-
-                    if (!filtrer)
+                    // Ajout du filtre WHERE si nécessaire
+                    if (!string.IsNullOrEmpty(valeur))
                     {
-                        cmd = new MySqlCommand(baseSelect + " GROUP BY s.id, s.nom, s.prenom, s.dateNais, s.rue, s.codePostal, s.ville, s.niveauExperience", cnx);
+                        if (critere == "Ville") sql += " WHERE s.ville LIKE @valeur ";
+                        else if (critere == "Niveau") sql += " WHERE s.niveauExperience = @valeur ";
+                        else if (critere == "Nom du Sport") sql += " WHERE sp.nomSport LIKE @valeur ";
                     }
-                    else
+
+                    sql += " GROUP BY s.id, s.nom, s.prenom, s.dateNais, s.rue, s.codePostal, s.ville, s.niveauExperience";
+
+                    using (MySqlCommand cmd = new MySqlCommand(sql, cnx))
                     {
-                        // Requête paramétrée selon le critère
-                        string chRequete = "SELECT s.id, s.nom, s.prenom, s.dateNais, s.rue, s.codePostal, s.ville, s.niveauExperience, sp.nomSport FROM Sportif s INNER JOIN Sport sp ON s.idSport = sp.id WHERE ";
-                        switch (critere)
+                        if (!string.IsNullOrEmpty(valeur))
                         {
-                            case "Ville":
-                                chRequete += "s.Ville LIKE @valeur";
-                                break;
-                            case "Niveau":
-                                chRequete += "s.niveauExperience = @valeur";
-                                break;
-                            case "Nom du Sport":
-                                chRequete += "sp.nomSport LIKE @valeur";
-                                break;
-                            default:
-                                chRequete += "1=1";
-                                break;
+                            if (critere == "Niveau") cmd.Parameters.AddWithValue("@valeur", valeur);
+                            else cmd.Parameters.AddWithValue("@valeur", "%" + valeur + "%");
                         }
 
-                        cmd = new MySqlCommand(chRequete, cnx);
-
-                        if (critere == "Niveau" && int.TryParse(valeur, out int niveau))
-                            cmd.Parameters.AddWithValue("@valeur", niveau); // Filtre exact pour niveau
-                        else
-                            cmd.Parameters.AddWithValue("@valeur", "%" + valeur + "%"); // Filtre partiel
-                    }
-
-                    using (MySqlDataReader rd = cmd.ExecuteReader())
-                    {
-                        while (rd.Read())
+                        using (MySqlDataReader rd = cmd.ExecuteReader())
                         {
-                            // Lecture simple des colonnes 
-                            int id = rd.GetInt32(0);
-                            string nom = rd.GetString(1);
-                            string prenom = rd.GetString(2);
-                            string dateStr = rd.GetDateTime(3).ToShortDateString();
-                            string rue = rd.GetString(4);
-                            string cp = rd.GetString(5);
-                            string ville = rd.GetString(6);
-                            string niveauStr = rd.GetInt32(7).ToString();
-                            string sport = rd.GetString(8);
+                            while (rd.Read())
+                            {
+                                ListViewItem item = new ListViewItem(rd["id"].ToString());
+                                item.SubItems.Add(rd["nom"].ToString());
+                                item.SubItems.Add(rd["prenom"].ToString());
+                                item.SubItems.Add(Convert.ToDateTime(rd["dateNais"]).ToShortDateString());
+                                item.SubItems.Add(rd["rue"].ToString());
+                                item.SubItems.Add(rd["codePostal"].ToString());
+                                item.SubItems.Add(rd["ville"].ToString());
+                                item.SubItems.Add(rd["niveauExperience"].ToString());
+                                item.SubItems.Add(rd["Sports"].ToString()); // Affiche la liste des sports
 
-                            // Crée un item pour chaque sportif
-                            ListViewItem item = new ListViewItem(id.ToString());
-                            item.SubItems.Add(nom);
-                            item.SubItems.Add(prenom);
-                            item.SubItems.Add(dateStr);
-                            item.SubItems.Add(rue);
-                            item.SubItems.Add(cp);
-                            item.SubItems.Add(ville);
-                            item.SubItems.Add(niveauStr);
-                            item.SubItems.Add(sport);
-
-                            listSportifs.Items.Add(item); // Ajoute à la ListView
+                                listSportifs.Items.Add(item);
+                            }
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Erreur lors de la récupération des sportifs : " + ex.Message);
+                MessageBox.Show("Erreur : " + ex.Message);
             }
         }
 

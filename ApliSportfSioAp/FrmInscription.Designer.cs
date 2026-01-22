@@ -73,7 +73,6 @@
             this.txtLogin.Name = "txtLogin";
             this.txtLogin.Size = new System.Drawing.Size(240, 20);
             this.txtLogin.TabIndex = 2;
-            this.txtLogin.TextChanged += new System.EventHandler(this.txtLogin_TextChanged);
             // 
             // labelMotDePasse
             // 
@@ -138,7 +137,6 @@
             this.Name = "FrmInscription";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Inscription";
-            this.Load += new System.EventHandler(this.FrmInscription_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

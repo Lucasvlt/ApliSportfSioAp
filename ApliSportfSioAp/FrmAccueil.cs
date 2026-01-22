@@ -7,7 +7,7 @@ namespace ApliSportfSioAp
 {
     public partial class FrmAccueil : Form
     {
-        private readonly string login;
+        private  string login;
 
         public FrmAccueil(string login)
         {
@@ -22,6 +22,7 @@ namespace ApliSportfSioAp
             listSportifs.View = View.Details;
             listSportifs.FullRowSelect = true;
             listSportifs.GridLines = true;
+
             listSportifs.Columns.Clear();
             listSportifs.Columns.Add("ID", 50);
             listSportifs.Columns.Add("Nom", 100);
@@ -56,7 +57,7 @@ namespace ApliSportfSioAp
 
             try
             {
-                using (MySqlConnection cnx = new MySqlConnection(chConnexion))
+                using (var cnx = new MySqlConnection(chConnexion))
                 {
                     cnx.Open();
 
@@ -87,7 +88,7 @@ namespace ApliSportfSioAp
 
                     sql += " GROUP BY s.id ORDER BY s.nom, s.prenom";
 
-                    using (MySqlCommand cmd = new MySqlCommand(sql, cnx))
+                    using (var cmd = new MySqlCommand(sql, cnx))
                     {
                         if (!string.IsNullOrEmpty(valeur))
                         {
@@ -97,11 +98,11 @@ namespace ApliSportfSioAp
                                 cmd.Parameters.AddWithValue("@valeur", "%" + valeur + "%");
                         }
 
-                        using (MySqlDataReader rd = cmd.ExecuteReader())
+                        using (var rd = cmd.ExecuteReader())
                         {
                             while (rd.Read())
                             {
-                                ListViewItem item = new ListViewItem(rd["id"].ToString());
+                                var item = new ListViewItem(rd["id"].ToString());
                                 item.SubItems.Add(rd["nom"].ToString());
                                 item.SubItems.Add(rd["prenom"].ToString());
                                 item.SubItems.Add(Convert.ToDateTime(rd["dateNais"]).ToShortDateString());
@@ -128,19 +129,20 @@ namespace ApliSportfSioAp
             if (listSportifs.SelectedItems.Count == 0)
                 return;
 
-            ListViewItem it = listSportifs.SelectedItems[0];
+            var it = listSportifs.SelectedItems[0];
 
-            FrmModification frm = new FrmModification(
-                int.Parse(it.Text),
-                it.SubItems[1].Text,
-                it.SubItems[2].Text,
-                DateTime.Parse(it.SubItems[3].Text),
-                it.SubItems[4].Text,
-                it.SubItems[5].Text,
-                it.SubItems[6].Text,
-                int.Parse(it.SubItems[7].Text),
-                it.SubItems[8].Text
-            );
+            // Conversion simple et naturelle
+            int id = int.Parse(it.Text);
+            string nom = it.SubItems[1].Text;
+            string prenom = it.SubItems[2].Text;
+            DateTime date = DateTime.Parse(it.SubItems[3].Text);
+            string rue = it.SubItems[4].Text;
+            string cp = it.SubItems[5].Text;
+            string ville = it.SubItems[6].Text;
+            int niveau = int.Parse(it.SubItems[7].Text);
+            string sports = it.SubItems[8].Text;
+
+            FrmModification frm = new FrmModification(id, nom, prenom, date, rue, cp, ville, niveau, sports);
 
             if (frm.ShowDialog() == DialogResult.OK)
                 RafraichirListe();
@@ -168,13 +170,14 @@ namespace ApliSportfSioAp
                     {
                         cnx.Open();
 
-                        // Suppression sécurisée
+                        // Suppression des participations
                         using (var cmd1 = new MySqlCommand("DELETE FROM Participe WHERE idSportif=@id", cnx))
                         {
                             cmd1.Parameters.AddWithValue("@id", id);
                             cmd1.ExecuteNonQuery();
                         }
 
+                        // Suppression du sportif
                         using (var cmd2 = new MySqlCommand("DELETE FROM Sportif WHERE id=@id", cnx))
                         {
                             cmd2.Parameters.AddWithValue("@id", id);
@@ -204,7 +207,6 @@ namespace ApliSportfSioAp
 
         private void listSportifs_SelectedIndexChanged(object sender, EventArgs e)
         {
-            
         }
     }
 }

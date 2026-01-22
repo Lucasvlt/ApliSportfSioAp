@@ -20,7 +20,7 @@ namespace ApliSportfSioAp
 
             if (string.IsNullOrEmpty(login) || string.IsNullOrEmpty(motDePasse))
             {
-                ShowInfo("Veuillez remplir tous les champs.");
+                Info("Veuillez remplir tous les champs.");
                 return;
             }
 
@@ -32,11 +32,11 @@ namespace ApliSportfSioAp
                     // 🔥 Message personnalisé
                     if (login == "a" && motDePasse == "a")
                     {
-                        ShowInfo("Bienvenue administrateur !");
+                        Info("Bienvenue administrateur !");
                     }
                     else
                     {
-                        ShowInfo("Bienvenue " + login + " !");
+                        Info("Bienvenue " + login + " !");
                     }
 
                     this.Tag = login; // Permet de récupérer le login dans FrmAccueil
@@ -45,18 +45,18 @@ namespace ApliSportfSioAp
                 }
                 else
                 {
-                    ShowWarning("Identifiants incorrects.");
+                    Attention("Identifiants incorrects.");
                     txtMotDePasse.Clear();
                     txtMotDePasse.Focus();
                 }
             }
             catch (MySqlException mex)
             {
-                ShowError("Erreur base de données : " + mex.Message);
+                MessageErreur("Erreur base de données : " + mex.Message);
             }
             catch (Exception ex)
             {
-                ShowError("Erreur inattendue : " + ex.Message);
+                MessageErreur("Erreur inattendue : " + ex.Message);
             }
         }
 
@@ -96,19 +96,19 @@ namespace ApliSportfSioAp
 
             if (string.IsNullOrEmpty(login))
             {
-                ShowInfo("Veuillez entrer votre login pour réinitialiser le mot de passe.");
+                Info("Veuillez entrer votre login pour réinitialiser le mot de passe.");
                 return;
             }
 
             if (string.IsNullOrEmpty(nouveau) || string.IsNullOrEmpty(confirmer))
             {
-                ShowInfo("Veuillez remplir tous les champs de mot de passe.");
+                Info("Veuillez remplir tous les champs de mot de passe.");
                 return;
             }
 
             if (nouveau != confirmer)
             {
-                ShowWarning("Les mots de passe ne correspondent pas.");
+                Attention("Les mots de passe ne correspondent pas.");
                 return;
             }
 
@@ -117,23 +117,23 @@ namespace ApliSportfSioAp
                 bool ok = UpdatePassword(login, nouveau);
                 if (ok)
                 {
-                    ShowInfo("Mot de passe mis à jour !");
+                    Info("Mot de passe mis à jour !");
                     panelMotDePasseOublie.Visible = false;
                     txtNouveauMotDePasse.Clear();
                     txtConfirmerMotDePasse.Clear();
                 }
                 else
                 {
-                    ShowWarning("Login introuvable.");
+                    Attention("Login introuvable.");
                 }
             }
             catch (MySqlException mex)
             {
-                ShowError("Erreur base de données : " + mex.Message);
+                MessageErreur("Erreur base de données : " + mex.Message);
             }
             catch (Exception ex)
             {
-                ShowError("Erreur inattendue : " + ex.Message);
+                MessageErreur("Erreur inattendue : " + ex.Message);
             }
         }
 
@@ -165,24 +165,21 @@ namespace ApliSportfSioAp
         }
 
         // Helpers pour messages
-        private void ShowInfo(string message)
+        private void Info(string message)
         {
             MessageBox.Show(message, "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        private void ShowWarning(string message)
+        private void Attention(string message)
         {
             MessageBox.Show(message, "Attention", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
 
-        private void ShowError(string message)
+        private void MessageErreur(string message)
         {
             MessageBox.Show(message, "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
-        private void txtLogin_TextChanged(object sender, EventArgs e)
-        {
-            // Optionnel
-        }
+       
     }
 }

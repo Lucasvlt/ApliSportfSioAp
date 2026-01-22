@@ -11,16 +11,19 @@ namespace ApliSportfSioAp
         public FrmSports()
         {
             InitializeComponent();
-            LoadSports();
+            LoadSports(); // Charge la liste au démarrage
         }
 
-        private string GetCnx() =>
-            ConfigurationManager.ConnectionStrings["cnxBdSport"].ConnectionString;
+        // Récupère la chaîne de connexion
+        private string GetCnx()
+        {
+            return ConfigurationManager.ConnectionStrings["cnxBdSport"].ConnectionString;
+        }
 
-        // Chargement des sports
+        // Charge la liste des sports dans le DataGridView
         private void LoadSports()
         {
-            dgvSports.Rows.Clear();
+            dgvSports.Rows.Clear(); // Vide la liste avant de la remplir
 
             try
             {
@@ -28,6 +31,7 @@ namespace ApliSportfSioAp
                 using (var cmd = new MySqlCommand("CALL ListeSports()", cnx))
                 {
                     cnx.Open();
+
                     using (var rd = cmd.ExecuteReader())
                     {
                         while (rd.Read())
@@ -50,7 +54,7 @@ namespace ApliSportfSioAp
         // Ajouter un sport
         private void btnAjouter_Click(object sender, EventArgs e)
         {
-            string nom = Interaction.InputBox("Nom du sport :", "Ajouter sport", "");
+            string nom = Interaction.InputBox("Nom du sport :", "Ajouter un sport", "").Trim();
 
             if (string.IsNullOrWhiteSpace(nom))
                 return;
@@ -60,12 +64,12 @@ namespace ApliSportfSioAp
                 using (var cnx = new MySqlConnection(GetCnx()))
                 using (var cmd = new MySqlCommand("CALL InsererSport(@nom)", cnx))
                 {
-                    cmd.Parameters.AddWithValue("@nom", nom.Trim());
+                    cmd.Parameters.AddWithValue("@nom", nom);
                     cnx.Open();
                     cmd.ExecuteNonQuery();
                 }
 
-                LoadSports();
+                LoadSports(); // Rafraîchit la liste
             }
             catch (Exception ex)
             {
@@ -84,10 +88,11 @@ namespace ApliSportfSioAp
                 return;
             }
 
-            int id = Convert.ToInt32(dgvSports.SelectedRows[0].Cells[0].Value);
-            string current = dgvSports.SelectedRows[0].Cells[1].Value.ToString();
+            var row = dgvSports.SelectedRows[0];
+            int id = Convert.ToInt32(row.Cells[0].Value);
+            string current = row.Cells[1].Value.ToString();
 
-            string nom = Interaction.InputBox("Modifier nom du sport :", "Modifier sport", current);
+            string nom = Interaction.InputBox("Modifier le nom :", "Modifier sport", current).Trim();
 
             if (string.IsNullOrWhiteSpace(nom))
                 return;
@@ -98,7 +103,7 @@ namespace ApliSportfSioAp
                 using (var cmd = new MySqlCommand("CALL ModifierSport(@id, @nom)", cnx))
                 {
                     cmd.Parameters.AddWithValue("@id", id);
-                    cmd.Parameters.AddWithValue("@nom", nom.Trim());
+                    cmd.Parameters.AddWithValue("@nom", nom);
                     cnx.Open();
                     cmd.ExecuteNonQuery();
                 }
@@ -122,7 +127,10 @@ namespace ApliSportfSioAp
                 return;
             }
 
-            int id = Convert.ToInt32(dgvSports.SelectedRows[0].Cells[0].Value);
+            var row = dgvSports.SelectedRows[0]; // Récupère la ligne sélectionnée
+            
+            int id = int.Parse(row.Cells[0].Value.ToString()); // Récupère l'ID du sport à supprimer 
+
 
             if (MessageBox.Show("Confirmer la suppression ?", "Supprimer",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
@@ -147,18 +155,10 @@ namespace ApliSportfSioAp
             }
         }
 
+        // Rafraîchir la liste
         private void btnRafraichir_Click(object sender, EventArgs e)
         {
             LoadSports();
-        }
-
-        private void dgvSports_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-        }
-
-        private void dgvSports_CellContentClick_1(object sender, DataGridViewCellEventArgs e)
-        {
-
         }
     }
 }

@@ -154,6 +154,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -174,6 +175,21 @@
       <Project>{54DD899B-7B1F-40C1-8D62-8308FAB4A1E2}</Project>
       <Name>BiblioSportif</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\téléchargé.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\téléchargé %281%29.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\téléchargé %282%29.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\téléchargé %283%29.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pngtree-running-sport-competition-poster-background-picture-image_1083383.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

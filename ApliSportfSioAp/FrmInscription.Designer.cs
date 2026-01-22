@@ -123,6 +123,7 @@
             // 
             // FrmInscription
             // 
+            this.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.ClientSize = new System.Drawing.Size(517, 308);
             this.Controls.Add(this.btnValiderInscription);
             this.Controls.Add(this.txtConfirmerMotDePasse);

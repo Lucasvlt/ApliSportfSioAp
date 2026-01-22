@@ -116,7 +116,7 @@
             // 
             // listSportifs
             // 
-            this.listSportifs.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+            this.listSportifs.BackColor = System.Drawing.Color.White;
             this.listSportifs.HideSelection = false;
             this.listSportifs.Location = new System.Drawing.Point(92, 89);
             this.listSportifs.Name = "listSportifs";
@@ -184,7 +184,8 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.BackColor = System.Drawing.Color.AliceBlue;
+            this.BackgroundImage = global::ApliSportfSioAp.Properties.Resources.pngtree_running_sport_competition_poster_background_picture_image_1083383;
             this.ClientSize = new System.Drawing.Size(900, 480);
             this.Controls.Add(this.btnAjouter);
             this.Controls.Add(this.label1);

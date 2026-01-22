@@ -195,6 +195,7 @@
             // 
             // FrmModification
             // 
+            this.BackColor = System.Drawing.Color.Cornsilk;
             this.ClientSize = new System.Drawing.Size(360, 380);
             this.Controls.Add(this.btnModifier);
             this.Controls.Add(this.btnInserer);
@@ -216,6 +217,9 @@
             this.Controls.Add(this.lblNom);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Name = "FrmModification";
+            this.ResumeLayout(false);
+            this.PerformLayout();
+
         }
     }
 }

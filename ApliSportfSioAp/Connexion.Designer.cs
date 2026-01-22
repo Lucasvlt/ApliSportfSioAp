@@ -183,6 +183,7 @@
             // 
             // FrmConnexion
             // 
+            this.BackColor = System.Drawing.SystemColors.ControlDark;
             this.ClientSize = new System.Drawing.Size(443, 293);
             this.Controls.Add(this.panelMotDePasseOublie);
             this.Controls.Add(this.btnMdPOublie);

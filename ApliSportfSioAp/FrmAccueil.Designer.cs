@@ -123,7 +123,6 @@
             this.listSportifs.Size = new System.Drawing.Size(686, 295);
             this.listSportifs.TabIndex = 3;
             this.listSportifs.UseCompatibleStateImageBehavior = false;
-            this.listSportifs.SelectedIndexChanged += new System.EventHandler(this.listSportifs_SelectedIndexChanged);
             // 
             // comboBoxCritere
             // 
@@ -139,7 +138,6 @@
             this.txtValeur.Name = "txtValeur";
             this.txtValeur.Size = new System.Drawing.Size(391, 20);
             this.txtValeur.TabIndex = 5;
-            this.txtValeur.TextChanged += new System.EventHandler(this.txtValeur_TextChanged);
             // 
             // label1
             // 

@@ -3,6 +3,7 @@
     partial class FrmModification
     {
         private System.ComponentModel.IContainer components = null;
+
         private System.Windows.Forms.Label lblNom;
         private System.Windows.Forms.TextBox txtNom;
         private System.Windows.Forms.Label lblPrenom;
@@ -18,7 +19,6 @@
         private System.Windows.Forms.Label lblNiveau;
         private System.Windows.Forms.TextBox txtNiveau;
         private System.Windows.Forms.Label lblSport;
-        // CHANGEMENT ICI : CheckedListBox au lieu de ComboBox pour correspondre à ton code C#
         private System.Windows.Forms.CheckedListBox clbSports;
         private System.Windows.Forms.Button btnInserer;
         private System.Windows.Forms.Button btnModifier;
@@ -26,9 +26,8 @@
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
-            {
                 components.Dispose();
-            }
+
             base.Dispose(disposing);
         }
 
@@ -151,7 +150,7 @@
             this.lblNiveau.Name = "lblNiveau";
             this.lblNiveau.Size = new System.Drawing.Size(100, 23);
             this.lblNiveau.TabIndex = 5;
-            this.lblNiveau.Text = "Niveau (1-10) :";
+            this.lblNiveau.Text = "Niveau :";
             // 
             // txtNiveau
             // 
@@ -171,7 +170,6 @@
             // clbSports
             // 
             this.clbSports.CheckOnClick = true;
-            this.clbSports.FormattingEnabled = true;
             this.clbSports.Location = new System.Drawing.Point(110, 222);
             this.clbSports.Name = "clbSports";
             this.clbSports.Size = new System.Drawing.Size(230, 94);
@@ -218,11 +216,6 @@
             this.Controls.Add(this.lblNom);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Name = "FrmModification";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Détails Sportif";
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
         }
     }
 }

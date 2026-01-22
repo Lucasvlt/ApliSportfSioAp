@@ -29,8 +29,17 @@ namespace ApliSportfSioAp
                 bool ok = Authenticate(login, motDePasse);
                 if (ok)
                 {
-                    ShowInfo("Connexion réussie !");
-                    this.Tag = login;
+                    // 🔥 Message personnalisé
+                    if (login == "a" && motDePasse == "a")
+                    {
+                        ShowInfo("Bienvenue administrateur !");
+                    }
+                    else
+                    {
+                        ShowInfo("Bienvenue " + login + " !");
+                    }
+
+                    this.Tag = login; // Permet de récupérer le login dans FrmAccueil
                     this.DialogResult = DialogResult.OK;
                     this.Close();
                 }
@@ -51,32 +60,34 @@ namespace ApliSportfSioAp
             }
         }
 
-        // Vérifie les identifiants (simple pour apprentissage)
+        // Vérifie les identifiants
         private bool Authenticate(string login, string motDePasse)
         {
             string chConnexion = ConfigurationManager.ConnectionStrings["cnxBdSport"].ConnectionString;
+
             using (var cnx = new MySqlConnection(chConnexion))
-            using (var cmd = new MySqlCommand("SELECT motDePasse FROM Utilisateur WHERE login = @login LIMIT 1", cnx))
+            using (var cmd = new MySqlCommand(
+                "SELECT motDePasse FROM Utilisateur WHERE login = @login LIMIT 1", cnx))
             {
                 cmd.Parameters.AddWithValue("@login", login);
                 cnx.Open();
+
                 var result = cmd.ExecuteScalar();
                 if (result == null || result == DBNull.Value)
                     return false;
 
                 string motDePasseStocke = result.ToString();
-                // comparaison simple (texte). Remplacer par vérification de hash plus tard.
                 return motDePasseStocke == motDePasse;
             }
         }
 
-        // Affiche le panneau de réinitialisation du mot de passe
+        // Affiche / masque le panneau de réinitialisation
         private void btnMdPOublie_Click(object sender, EventArgs e)
         {
             panelMotDePasseOublie.Visible = !panelMotDePasseOublie.Visible;
         }
 
-        // Valide et applique la mise à jour du mot de passe
+        // Valide la réinitialisation du mot de passe
         private void btnValiderMotDePasse_Click(object sender, EventArgs e)
         {
             string login = txtLogin.Text.Trim();
@@ -126,15 +137,18 @@ namespace ApliSportfSioAp
             }
         }
 
-        // Met à jour le mot de passe (simple). En production, hacher avant d'enregistrer.
+        // Mise à jour du mot de passe
         private bool UpdatePassword(string login, string nouveauMotDePasse)
         {
             string chConnexion = ConfigurationManager.ConnectionStrings["cnxBdSport"].ConnectionString;
+
             using (var cnx = new MySqlConnection(chConnexion))
-            using (var cmd = new MySqlCommand("UPDATE Utilisateur SET motDePasse = @mdp WHERE login = @login", cnx))
+            using (var cmd = new MySqlCommand(
+                "UPDATE Utilisateur SET motDePasse = @mdp WHERE login = @login", cnx))
             {
                 cmd.Parameters.AddWithValue("@mdp", nouveauMotDePasse);
                 cmd.Parameters.AddWithValue("@login", login);
+
                 cnx.Open();
                 int lignes = cmd.ExecuteNonQuery();
                 return lignes > 0;
@@ -150,7 +164,7 @@ namespace ApliSportfSioAp
             }
         }
 
-        // Helpers pour messages (simplifie l'affichage)
+        // Helpers pour messages
         private void ShowInfo(string message)
         {
             MessageBox.Show(message, "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -168,7 +182,7 @@ namespace ApliSportfSioAp
 
         private void txtLogin_TextChanged(object sender, EventArgs e)
         {
-
+            // Optionnel
         }
     }
 }

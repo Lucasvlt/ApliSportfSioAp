@@ -6,30 +6,19 @@ namespace BiblioSportif
 {
     public class Participe
     {
-        public int IdSportif { get; set; }
-        public int IdSport { get; set; } // Renommé pour cohérence SQL
+        private int idSportif;
+        private int idSport;
 
         public Participe(int idSportif, int idSport)
         {
-            IdSportif = idSportif;
-            IdSport = idSport;
+            this.IdSportif = idSportif;
+            this.IdSport = idSport;
         }
 
-        public Participe() { }
-
-        public void Enregistrer(string chaineConnexion)
+        public int IdSportif { get => idSportif; set => idSportif = value; }
+        public int IdSport
         {
-            using (var cnx = new MySqlConnection(chaineConnexion))
-            {
-                // Utilisation de idSport pour correspondre à ta table SQL
-                string sql = "INSERT IGNORE INTO Participe (idSportif, idSport) VALUES (@idS, @idSp)";
-                var cmd = new MySqlCommand(sql, cnx);
-                cmd.Parameters.AddWithValue("@idS", this.IdSportif);
-                cmd.Parameters.AddWithValue("@idSp", this.IdSport);
-
-                cnx.Open();
-                cmd.ExecuteNonQuery();
-            }
+            get => idSport; set => idSport = value;
         }
     }
 }
